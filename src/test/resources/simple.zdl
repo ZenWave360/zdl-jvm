@@ -9,6 +9,9 @@ MAX_LENGTH=100
 */
 @aggregate
 @service(CustomerService)
+@object({size: 10, limit: 100})
+@array([1, 2, 3])
+@array2(1, 2, 3)
 entity Customer {
   username String required unique min(5)
   tags String[]
@@ -21,11 +24,11 @@ Enum javadoc comment
 enum OrderStatus {
   NEW(1) /** new order */,  IN_PROGRESS(2) /** order in progress */,
   /** order completed */
-  COMPLETED(3)
+  COMPLETED("3")
   /**
     * order cancelled
     */
-  CANCELLED(4)
+  CANCELLED('4')
 }
 
 @input

@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +40,60 @@ public class ZdlListenerImpl extends ZdlBaseListener {
 
     private Object getText(ParserRuleContext ctx, Object defaultValue) {
         return ctx != null? ctx.getText() : defaultValue;
+    }
+
+    private Object getValueText(ZdlParser.ValueContext ctx) {
+        if(ctx == null) {
+            return null;
+        }
+        if(ctx.ID() != null) {
+            return ctx.ID().getText();
+        }
+        if(ctx.SINGLE_QUOTED_STRING() != null) {
+            return unquote(ctx.SINGLE_QUOTED_STRING().getText(), "'");
+        }
+        if(ctx.DOUBLE_QUOTED_STRING() != null) {
+            return unquote(ctx.DOUBLE_QUOTED_STRING().getText(), "\"");
+        }
+        if(ctx.INT() != null) {
+            return Long.valueOf(ctx.INT().getText());
+        }
+        if(ctx.NUMBER() != null) {
+            return new BigDecimal(ctx.NUMBER().getText());
+        }
+        if(ctx.TRUE() != null) {
+            return true;
+        }
+        if(ctx.FALSE() != null) {
+            return false;
+        }
+        return getText(ctx);
+    }
+
+    private String unquote(String text, String quote) {
+        var escape = "\\\\";
+        return text
+                .replaceAll("^" + quote, "")
+                .replaceAll(escape + quote, quote)
+                .replaceAll(quote + "$", "");
+    }
+
+    private Object getObject(ZdlParser.ObjectContext ctx) {
+        if(ctx == null) {
+            return null;
+        }
+        var map = new FluentMap();
+        ctx.pair().forEach(pair -> map.put(pair.ID().getText(), getValueText(pair.value()))); // TODO: consider nested objects
+        return map;
+    }
+
+    private Object getArray(ZdlParser.ArrayContext ctx) {
+        if(ctx == null) {
+            return null;
+        }
+        var list = new ArrayList<>();
+        ctx.value().forEach(value -> list.add(getValueText(value)));
+        return list;
     }
 
     private String pluralize(String name) {
@@ -124,8 +179,10 @@ public class ZdlListenerImpl extends ZdlBaseListener {
     @Override
     public void enterOption(ZdlParser.OptionContext ctx) {
         var name = ctx.reserved_option() != null? ctx.reserved_option().getText().replace("@", "") : getText(ctx.option_name());
-        var value = getText(ctx.option_value(), true);
-        currentStack.peek().appendTo("options", name, value);
+        var value = ctx.option_value() != null? getValueText(ctx.option_value().value()) : null;
+        var array = ctx.option_value() != null? getArray(ctx.option_value().array()) : null;
+        var object = ctx.option_value() != null? getObject(ctx.option_value().object()) : null;
+        currentStack.peek().appendTo("options", name, first(value, array, object, true));
         super.enterOption(ctx);
     }
 
@@ -204,7 +261,7 @@ public class ZdlListenerImpl extends ZdlBaseListener {
     public void enterEnum_value(ZdlParser.Enum_valueContext ctx) {
         var name = getText(ctx.enum_value_name());
         var javadoc = first(getText(ctx.javadoc(), getText(ctx.suffix_javadoc())));
-        var value = getText(ctx.enum_value_value()); // TODO refactor when supporting quoted strings
+        var value = ctx.enum_value_value() != null? getValueText(ctx.enum_value_value().value()) : null;
         currentStack.peek().appendTo("values", name, new FluentMap()
                 .with("name", name)
                 .with("javadoc", javadoc(javadoc))

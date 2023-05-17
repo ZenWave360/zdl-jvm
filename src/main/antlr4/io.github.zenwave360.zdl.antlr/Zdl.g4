@@ -35,6 +35,9 @@ MAXLENGTH: 'maxlength';
 PATTERN: 'pattern';
 AT: '@';
 ARRAY: '[]';
+TRUE: 'true';
+FALSE: 'false';
+NULL: 'null';
 
 FIELD_SEPARATOR: ',';
 
@@ -42,28 +45,34 @@ fragment DIGIT : [0-9] ;
 
 ID: [a-zA-Z_][a-zA-Z0-9_]*;
 INT: DIGIT+ ;
-NUMBER: DIGIT+ ([.,] DIGIT+)? ;
-DOUBLE_QUOTED_STRING :  '"' (ESC | ~["\\])* '"' ;
-SINGLE_QUOTED_STRING :  '\'' (ESC | ~['\\])* '\'' ;
-fragment ESC :   '\\' ["\\/bfnrt] ;
+NUMBER: DIGIT+ ([.] DIGIT+)? ;
 
 LEGACY_CONSTANT: [A-Z0-9_]+ '=' DIGIT+;
-
-VALUE : SINGLE_QUOTED_STRING | DOUBLE_QUOTED_STRING | NUMBER | 'true' | 'false' | 'null';
-OBJECT: '{' (ID ':' VALUE)? (',' ID ':' VALUE)* '}';
 
 
 // Comments
 //SUFFIX_JAVADOC: {getCharPositionInLine() > 10}? '/**' .*? '*/';
 //SUFFIX_JAVADOC: '/***' .*? '*/';
 JAVADOC: '/**' .*? '*/';
-LINE_COMMENT : '//' .*? '\r'? '\n' -> skip ; // Match "//" stuff '\n'
-COMMENT : '/*' .*? '*/' -> skip ; // Match "/*" stuff "*/"
+LINE_COMMENT : '//' .*? '\r'? '\n' -> channel(HIDDEN) ; // Match "//" stuff '\n'
+COMMENT : '/*' .*? '*/' -> channel(HIDDEN) ; // Match "/*" stuff "*/"
+
+DOUBLE_QUOTED_STRING :  '"' (ESC | ~["\\])* '"' ;
+SINGLE_QUOTED_STRING :  '\'' (ESC | ~['\\])* '\'' ;
+fragment ESC :   '\\' ['"\\/bfnrt] ;
 
 // Whitespace
-WS: [ \t\r\n]+ -> skip;
+WS: [ \t\r\n]+ -> channel(HIDDEN);
 
 PATTERN_REGEX: '/' .*? '/' ; // TODO: improve regex
+
+/** "catch all" rule for any char not matche in a token rule of your
+ *  grammar. Lexers in Intellij must return all tokens good and bad.
+ *  There must be a token to cover all characters, which makes sense, for
+ *  an IDE. The parser however should not see these bad tokens because
+ *  it just confuses the issue. Hence, the hidden channel.
+ */
+ERRCHAR: . -> channel(HIDDEN);
 
 // Rules
 zdl: global_javadoc? legacy_constants? (entity | enum | input | event | relationships | service | service_legacy)* EOF;
@@ -73,11 +82,16 @@ suffix_javadoc: JAVADOC;
 
 legacy_constants: LEGACY_CONSTANT*;
 
+value : ID | SINGLE_QUOTED_STRING | DOUBLE_QUOTED_STRING | INT | NUMBER | TRUE | FALSE | NULL;
+pair: ID ':' value;
+object: '{' pair (',' pair)* '}';
+array: '['? value (',' value)* ']'?;
+
 // @options
 option: reserved_option ('(' option_value ')')? | '@' option_name ('(' option_value ')')?;
 reserved_option: ENTITY_OPTION | SERVICE_OPTION | INPUT_OPTION | EVENT_OPTION | RELATIONSHIP_OPTION | ENUM_OPTION | PAGEABLE_OPTION;
 option_name: ID;
-option_value: ID | VALUE | OBJECT;
+option_value: value | array | object;
 
 // entities
 entity: javadoc? (option)* ENTITY entity_name entity_table_name? '{' fields '}';
@@ -100,7 +114,7 @@ enum: javadoc? (option)* ENUM enum_name '{' (enum_value FIELD_SEPARATOR?)* '}';
 enum_name: ID;
 enum_value: javadoc? enum_value_name ('(' enum_value_value ')')? suffix_javadoc?;
 enum_value_name: ID;
-enum_value_value: INT | ID | VALUE;
+enum_value_value: value;
 
 // inputs
 input: javadoc? (option)* INPUT input_name '{' fields '}';
