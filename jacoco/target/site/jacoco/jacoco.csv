@@ -1,6 +1,6 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlParser.Option_valueContext,2,27,2,2,1,7,3,4,1,4
-io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlModelValidator,132,485,27,51,8,69,18,37,2,14
+io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlModelValidator,192,425,38,40,13,64,27,28,5,11
 io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlListenerUtils,43,437,12,34,12,94,10,37,2,22
 io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlParser.Entity_definitionContext,2,33,2,2,1,8,3,5,1,5
 io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlParser.SimpleContext,22,42,2,2,5,10,7,7,5,7
@@ -46,7 +46,7 @@ io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlParse
 io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlBaseListener,58,141,0,0,58,139,58,139,58,139
 io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlParser.Field_typeContext,2,31,2,2,1,8,3,5,1,5
 io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlParser.Relationship_description_fieldContext,38,0,4,0,10,0,9,0,7,0
-io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlListenerImpl,11,1609,12,44,0,307,14,64,2,48
+io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlListenerImpl,11,1612,12,44,0,308,14,64,2,48
 io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlParser.Relationship_entity_nameContext,7,21,2,2,2,6,4,3,2,3
 io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlParser.Api_nameContext,7,21,2,2,2,6,4,3,2,3
 io.github.zenwave360.zenwave-sdk:zdl-jvm,io.github.zenwave360.zdl.antlr,ZdlParser.EntityContext,13,39,2,2,3,9,5,6,3,6
