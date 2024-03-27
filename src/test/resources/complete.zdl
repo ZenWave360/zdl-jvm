@@ -80,7 +80,7 @@ entity CustomerOrder {
     orderTime Instant = "Instant.now()" required /** orderTime javadoc */
     status OrderStatus = OrderStatus.RECEIVED required
     @auditing @ref
-    customerDetails Customer {
+    customerDetails Customer(customer_table) {
       customerId String required
       firstName String required
       lastName String required

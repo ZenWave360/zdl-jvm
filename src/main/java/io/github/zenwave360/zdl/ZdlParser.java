@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class ZdlParser {
 
-    public static final List<String> STANDARD_FIELD_TYPES = List.of("String", "Integer", "Long", "int", "long", "BigDecimal", "Float", "float", "Double", "double", "Enum", "Boolean", "boolean", "LocalDate", "LocalDateTime", "ZonedDateTime", "Instant", "Duration", "UUID", "byte", "byte[]", "Blob", "AnyBlob", "ImageBlob", "TextBlob");
+    public static final List<String> STANDARD_FIELD_TYPES = List.of("String", "Integer", "Long", "int", "long", "BigDecimal", "Float", "float", "Double", "double", "Enum", "Boolean", "boolean", "Map", "LocalDate", "LocalDateTime", "ZonedDate", "ZonedDateTime", "Instant", "Duration", "UUID", "byte", "byte[]", "Blob", "AnyBlob", "ImageBlob", "TextBlob");
 
     public static final List<String> STANDARD_VALIDATIONS = List.of("required", "unique", "min", "max", "minlength", "maxlength", "pattern");
 

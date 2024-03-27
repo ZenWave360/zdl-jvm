@@ -286,6 +286,10 @@ public class ZdlListenerImpl extends io.github.zenwave360.zdl.antlr.ZdlBaseListe
         ((Map)parentField).put("validations", validations);
         currentStack.push(processEntity(entityName, entityJavadoc, tableName).with("type", currentCollection.split("\\.")[0]));
         currentStack.peek().appendTo("options", "embedded", true);
+        var parenFieldOptions = JSONPath.get(parentField, "options", Map.of());
+        for (var entry : parenFieldOptions.entrySet()) {
+            currentStack.peek().appendTo("options", (String) entry.getKey(), entry.getValue());
+        }
         model.appendTo(currentCollection, entityName, currentStack.peek());
     }
 
