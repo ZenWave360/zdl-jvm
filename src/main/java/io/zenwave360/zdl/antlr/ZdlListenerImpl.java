@@ -59,7 +59,9 @@ public class ZdlListenerImpl extends ZdlBaseListener {
 
     @Override
     public void enterImport_(ZdlParser.Import_Context ctx) {
-        model.appendToList("imports", getValueText(ctx.import_value().string()));
+        model.appendToList("imports", new FluentMap()
+                .with("key", getText(ctx.import_key()))
+                .with("value", getValueText(ctx.import_value().string())));
     }
 
     @Override
@@ -531,6 +533,7 @@ public class ZdlListenerImpl extends ZdlBaseListener {
         var commandName = getText(ctx.aggregate_command_name());
         var location = "aggregates." + aggregateName + ".commands." + commandName;
         var parameter = ctx.aggregate_command_parameter() != null? ctx.aggregate_command_parameter().getText() : null;
+        var parameterIsOptional = ctx.aggregate_command_parameter() != null? ctx.aggregate_command_parameter().OPTIONAL() != null : null;
         var withEvents = getServiceMethodEvents(location, ctx.with_events());
         var javadoc = javadoc(first(ctx.javadoc(), ctx.suffix_javadoc()));
 
@@ -538,6 +541,7 @@ public class ZdlListenerImpl extends ZdlBaseListener {
                 .with("name", commandName)
                 .with("aggregateName", aggregateName)
                 .with("parameter", parameter)
+                .with("parameterIsOptional", parameterIsOptional)
                 .with("withEvents", withEvents)
                 .with("javadoc", javadoc)
                 ;
@@ -587,7 +591,9 @@ public class ZdlListenerImpl extends ZdlBaseListener {
         var location = "services." + serviceName + ".methods." + methodName;
         var naturalId = ctx.service_method_parameter_natural() != null? true : null;
         var methodParamId = ctx.service_method_parameter_id() != null? "id" : null;
+        var methodParamIdIsOptional = ctx.service_method_parameter_id() != null? ctx.service_method_parameter_id().OPTIONAL() != null : null;
         var methodParameter = ctx.service_method_parameter() != null? ctx.service_method_parameter().getText() : null;
+        var methodParameterIsOptional = ctx.service_method_parameter() != null? ctx.service_method_parameter().OPTIONAL() != null : null;
         var returnType = ctx.service_method_return() != null? ctx.service_method_return().ID().getText() : null;
         var returnTypeIsArray = ctx.service_method_return() != null? ctx.service_method_return().ARRAY() != null : null;
         var returnTypeIsOptional = ctx.service_method_return() != null? ctx.service_method_return().OPTIONAL() != null : null;
@@ -599,7 +605,9 @@ public class ZdlListenerImpl extends ZdlBaseListener {
                 .with("serviceName", serviceName)
                 .with("naturalId", naturalId)
                 .with("paramId", methodParamId)
+                .with("paramIdIsOptional", methodParamIdIsOptional)
                 .with("parameter", methodParameter)
+                .with("parameterIsOptional", methodParameterIsOptional)
                 .with("returnType", returnType)
                 .with("returnTypeIsArray", returnTypeIsArray)
                 .with("returnTypeIsOptional", returnTypeIsOptional)

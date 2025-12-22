@@ -1,0 +1,3546 @@
+{
+  "imports" : [ "com.example:artifact:RELEASE" ],
+  "config" : {
+    "title" : "ZenWave Online Food Delivery - Orders Module",
+    "basePackage" : "io.zenwave360.example.orders",
+    "targetFolder" : "modules/orders",
+    "persistence" : "mongodb"
+  },
+  "apis" : {
+    "default" : {
+      "name" : "default",
+      "type" : "asyncapi",
+      "role" : "provider",
+      "javadoc" : null,
+      "options" : { },
+      "config" : {
+        "uri" : "orders/src/main/resources/apis/asyncapi.yml"
+      }
+    },
+    "RestaurantsAsyncAPI" : {
+      "name" : "RestaurantsAsyncAPI",
+      "type" : "asyncapi",
+      "role" : "client",
+      "javadoc" : null,
+      "options" : { },
+      "config" : {
+        "uri" : "restaurants/src/main/resources/apis/asyncapi.yml"
+      }
+    },
+    "DeliveryAsyncAPI" : {
+      "name" : "DeliveryAsyncAPI",
+      "type" : "asyncapi",
+      "role" : "client",
+      "javadoc" : null,
+      "options" : { },
+      "config" : {
+        "uri" : "delivery/src/main/resources/apis/asyncapi.yml"
+      }
+    }
+  },
+  "aggregates" : {
+    "CustomerOrderAggregate" : {
+      "name" : "CustomerOrderAggregate",
+      "type" : "aggregates",
+      "className" : "CustomerOrderAggregate",
+      "javadoc" : null,
+      "aggregateRoot" : "CustomerOrder",
+      "commands" : {
+        "customerOrderCommand" : {
+          "name" : "customerOrderCommand",
+          "aggregateName" : "CustomerOrderAggregate",
+          "parameter" : "CustomerOrderInput",
+          "withEvents" : [ "OrderEvent" ],
+          "javadoc" : null
+        }
+      }
+    }
+  },
+  "entities" : {
+    "CustomerOrder" : {
+      "name" : "CustomerOrder",
+      "className" : "CustomerOrder",
+      "tableName" : "customer_order",
+      "instanceName" : "customerOrder",
+      "classNamePlural" : "CustomerOrders",
+      "instanceNamePlural" : "customerOrders",
+      "kebabCase" : "customer-order",
+      "kebabCasePlural" : "customer-orders",
+      "javadoc" : null,
+      "options" : {
+        "aggregate" : true
+      },
+      "fields" : {
+        "orderTime" : {
+          "name" : "orderTime",
+          "type" : "Instant",
+          "initialValue" : "Instant.now()",
+          "javadoc" : "orderTime javadoc",
+          "comment" : "orderTime javadoc",
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "status" : {
+          "name" : "status",
+          "type" : "OrderStatus",
+          "initialValue" : "OrderStatus.RECEIVED",
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : true,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          },
+          "isComplexType" : true
+        },
+        "customerDetails" : {
+          "name" : "customerDetails",
+          "type" : "Customer",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : true,
+          "isArray" : false,
+          "options" : {
+            "auditing" : true,
+            "ref" : true
+          },
+          "validations" : { },
+          "optionsList" : [ {
+            "name" : "auditing",
+            "value" : true
+          }, {
+            "name" : "ref",
+            "value" : true
+          } ],
+          "isComplexType" : true
+        },
+        "restaurantDetails" : {
+          "name" : "restaurantDetails",
+          "type" : "Restaurant",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : true,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        },
+        "orderItems" : {
+          "name" : "orderItems",
+          "type" : "OrderItem",
+          "initialValue" : null,
+          "javadoc" : "orderItems javadoc",
+          "comment" : "orderItems javadoc",
+          "isEnum" : false,
+          "isEntity" : true,
+          "isArray" : true,
+          "options" : { },
+          "validations" : {
+            "minlength" : {
+              "value" : "1",
+              "name" : "minlength"
+            },
+            "maxlength" : {
+              "value" : "200",
+              "name" : "maxlength"
+            }
+          },
+          "isComplexType" : true
+        }
+      },
+      "type" : "entities",
+      "optionsList" : [ {
+        "name" : "aggregate",
+        "value" : true
+      } ]
+    },
+    "Customer" : {
+      "name" : "Customer",
+      "className" : "Customer",
+      "tableName" : "customer_table",
+      "instanceName" : "customer",
+      "classNamePlural" : "Customers",
+      "instanceNamePlural" : "customers",
+      "kebabCase" : "customer",
+      "kebabCasePlural" : "customers",
+      "javadoc" : null,
+      "options" : {
+        "embedded" : true,
+        "auditing" : true,
+        "ref" : true
+      },
+      "fields" : {
+        "customerId" : {
+          "name" : "customerId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "firstName" : {
+          "name" : "firstName",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "lastName" : {
+          "name" : "lastName",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "email" : {
+          "name" : "email",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "phone" : {
+          "name" : "phone",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "avatar" : {
+          "name" : "avatar",
+          "type" : "byte[]",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "address" : {
+          "name" : "address",
+          "type" : "Address",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : true,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        }
+      },
+      "type" : "entities"
+    },
+    "Address" : {
+      "name" : "Address",
+      "className" : "Address",
+      "tableName" : "address",
+      "instanceName" : "address",
+      "classNamePlural" : "Addresses",
+      "instanceNamePlural" : "addresses",
+      "kebabCase" : "address",
+      "kebabCasePlural" : "addresses",
+      "javadoc" : null,
+      "options" : {
+        "embedded" : true
+      },
+      "fields" : {
+        "street" : {
+          "name" : "street",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "city" : {
+          "name" : "city",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "state" : {
+          "name" : "state",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "zip" : {
+          "name" : "zip",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        }
+      },
+      "type" : "entities"
+    },
+    "Restaurant" : {
+      "name" : "Restaurant",
+      "className" : "Restaurant",
+      "tableName" : "restaurant",
+      "instanceName" : "restaurant",
+      "classNamePlural" : "Restaurants",
+      "instanceNamePlural" : "restaurants",
+      "kebabCase" : "restaurant",
+      "kebabCasePlural" : "restaurants",
+      "javadoc" : null,
+      "options" : {
+        "embedded" : true
+      },
+      "fields" : {
+        "restaurantId" : {
+          "name" : "restaurantId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "name" : {
+          "name" : "name",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "phone" : {
+          "name" : "phone",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "addresses" : {
+          "name" : "addresses",
+          "type" : "Address",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : true,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        }
+      },
+      "type" : "entities"
+    },
+    "OrderItem" : {
+      "name" : "OrderItem",
+      "className" : "OrderItem",
+      "tableName" : "order_item",
+      "instanceName" : "orderItem",
+      "classNamePlural" : "OrderItems",
+      "instanceNamePlural" : "orderItems",
+      "kebabCase" : "order-item",
+      "kebabCasePlural" : "order-items",
+      "javadoc" : "orderItems javadoc",
+      "options" : {
+        "embedded" : true
+      },
+      "fields" : {
+        "menuItemId" : {
+          "name" : "menuItemId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "name" : {
+          "name" : "name",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "description" : {
+          "name" : "description",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "price" : {
+          "name" : "price",
+          "type" : "BigDecimal",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "quantity" : {
+          "name" : "quantity",
+          "type" : "Integer",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        }
+      },
+      "type" : "entities"
+    },
+    "Aggregate2" : {
+      "name" : "Aggregate2",
+      "className" : "Aggregate2",
+      "tableName" : "aggregate2",
+      "instanceName" : "aggregate2",
+      "classNamePlural" : "Aggregate2s",
+      "instanceNamePlural" : "aggregate2s",
+      "kebabCase" : "aggregate2",
+      "kebabCasePlural" : "aggregate2s",
+      "javadoc" : null,
+      "options" : {
+        "aggregate" : true
+      },
+      "fields" : { },
+      "type" : "entities",
+      "optionsList" : [ {
+        "name" : "aggregate",
+        "value" : true
+      } ]
+    }
+  },
+  "enums" : {
+    "OrderStatus" : {
+      "name" : "OrderStatus",
+      "type" : "enums",
+      "className" : "OrderStatus",
+      "javadoc" : null,
+      "comment" : null,
+      "values" : {
+        "RECEIVED" : {
+          "name" : "RECEIVED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "KITCHEN_ACCEPTED" : {
+          "name" : "KITCHEN_ACCEPTED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "DELIVERY_ACCEPTED" : {
+          "name" : "DELIVERY_ACCEPTED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "CONFIRMED" : {
+          "name" : "CONFIRMED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "KITCHEN_IN_PROGRESS" : {
+          "name" : "KITCHEN_IN_PROGRESS",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "KITCHEN_READY" : {
+          "name" : "KITCHEN_READY",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "KITCHEN_DELIVERED" : {
+          "name" : "KITCHEN_DELIVERED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "ON_DELIVERY" : {
+          "name" : "ON_DELIVERY",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "DELIVERED" : {
+          "name" : "DELIVERED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "CANCELLED" : {
+          "name" : "CANCELLED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        }
+      }
+    },
+    "EnumWithValue" : {
+      "name" : "EnumWithValue",
+      "type" : "enums",
+      "className" : "EnumWithValue",
+      "javadoc" : null,
+      "comment" : null,
+      "hasValue" : true,
+      "values" : {
+        "VALUE1" : {
+          "name" : "VALUE1",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : "1"
+        },
+        "VALUE2" : {
+          "name" : "VALUE2",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : "2"
+        }
+      }
+    },
+    "KitchenStatus" : {
+      "name" : "KitchenStatus",
+      "type" : "enums",
+      "className" : "KitchenStatus",
+      "javadoc" : null,
+      "comment" : null,
+      "options" : {
+        "input" : true
+      },
+      "optionsList" : [ {
+        "name" : "input",
+        "value" : true
+      } ],
+      "values" : {
+        "REJECTED" : {
+          "name" : "REJECTED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "ACCEPTED" : {
+          "name" : "ACCEPTED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "IN_PROGRESS" : {
+          "name" : "IN_PROGRESS",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "READY" : {
+          "name" : "READY",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "DELIVERED" : {
+          "name" : "DELIVERED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "CANCELLED" : {
+          "name" : "CANCELLED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        }
+      }
+    },
+    "DeliveryStatus" : {
+      "name" : "DeliveryStatus",
+      "type" : "enums",
+      "className" : "DeliveryStatus",
+      "javadoc" : null,
+      "comment" : null,
+      "options" : {
+        "input" : true
+      },
+      "optionsList" : [ {
+        "name" : "input",
+        "value" : true
+      } ],
+      "values" : {
+        "REJECTED" : {
+          "name" : "REJECTED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "ACCEPTED" : {
+          "name" : "ACCEPTED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "IN_PROGRESS" : {
+          "name" : "IN_PROGRESS",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "DELIVERED" : {
+          "name" : "DELIVERED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "CANCELLED" : {
+          "name" : "CANCELLED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        }
+      }
+    }
+  },
+  "relationships" : {
+    "ManyToOne" : {
+      "ManyToOne_Address{customer}_Customer" : {
+        "type" : "ManyToOne",
+        "name" : "ManyToOne_Address{customer}_Customer",
+        "from" : "Address",
+        "commentInFrom" : "Address.customer javadoc",
+        "injectedFieldInFrom" : "customer",
+        "fromOptions" : { },
+        "fromValidations" : { },
+        "injectedFieldInFromDescription" : null,
+        "isInjectedFieldInFromRequired" : false,
+        "to" : "Customer",
+        "commentInTo" : null,
+        "injectedFieldInTo" : null,
+        "toOptions" : { },
+        "toValidations" : { },
+        "injectedFieldInToDescription" : null,
+        "isInjectedFieldInToRequired" : false
+      },
+      "ManyToOne_Address{customer2}_Customer" : {
+        "type" : "ManyToOne",
+        "name" : "ManyToOne_Address{customer2}_Customer",
+        "from" : "Address",
+        "commentInFrom" : null,
+        "injectedFieldInFrom" : "customer2",
+        "fromOptions" : { },
+        "fromValidations" : {
+          "required" : {
+            "value" : true,
+            "name" : "required"
+          }
+        },
+        "injectedFieldInFromDescription" : null,
+        "isInjectedFieldInFromRequired" : true,
+        "to" : "Customer",
+        "commentInTo" : null,
+        "injectedFieldInTo" : null,
+        "toOptions" : { },
+        "toValidations" : { },
+        "injectedFieldInToDescription" : null,
+        "isInjectedFieldInToRequired" : false
+      },
+      "ManyToOne_Address{customer3}_Customer" : {
+        "type" : "ManyToOne",
+        "name" : "ManyToOne_Address{customer3}_Customer",
+        "from" : "Address",
+        "commentInFrom" : null,
+        "injectedFieldInFrom" : "customer3",
+        "fromOptions" : { },
+        "fromValidations" : {
+          "required" : {
+            "value" : true,
+            "name" : "required"
+          }
+        },
+        "injectedFieldInFromDescription" : "lastname",
+        "isInjectedFieldInFromRequired" : true,
+        "to" : "Customer",
+        "commentInTo" : null,
+        "injectedFieldInTo" : null,
+        "toOptions" : { },
+        "toValidations" : { },
+        "injectedFieldInToDescription" : null,
+        "isInjectedFieldInToRequired" : false
+      }
+    },
+    "OneToMany" : {
+      "OneToMany_Customer{addresses}_Address{customer}" : {
+        "type" : "OneToMany",
+        "name" : "OneToMany_Customer{addresses}_Address{customer}",
+        "from" : "Customer",
+        "commentInFrom" : null,
+        "injectedFieldInFrom" : "addresses",
+        "fromOptions" : { },
+        "fromValidations" : { },
+        "injectedFieldInFromDescription" : "lastname",
+        "isInjectedFieldInFromRequired" : false,
+        "to" : "Address",
+        "commentInTo" : "Address.customer javadoc",
+        "injectedFieldInTo" : "customer",
+        "toOptions" : { },
+        "toValidations" : { },
+        "injectedFieldInToDescription" : null,
+        "isInjectedFieldInToRequired" : false
+      }
+    },
+    "OneToOne" : {
+      "OneToOne_Customer{address}_Address{customer}" : {
+        "type" : "OneToOne",
+        "name" : "OneToOne_Customer{address}_Address{customer}",
+        "from" : "Customer",
+        "commentInFrom" : null,
+        "injectedFieldInFrom" : "address",
+        "fromOptions" : { },
+        "fromValidations" : {
+          "required" : {
+            "value" : true,
+            "name" : "required"
+          },
+          "minlength" : {
+            "value" : "1",
+            "name" : "minlength"
+          },
+          "maxlength" : {
+            "value" : "3",
+            "name" : "maxlength"
+          }
+        },
+        "injectedFieldInFromDescription" : null,
+        "isInjectedFieldInFromRequired" : true,
+        "to" : "Address",
+        "commentInTo" : null,
+        "injectedFieldInTo" : "customer",
+        "toOptions" : {
+          "Id" : true
+        },
+        "toValidations" : { },
+        "injectedFieldInToDescription" : null,
+        "isInjectedFieldInToRequired" : false
+      }
+    },
+    "ManyToMany" : {
+      "ManyToMany_Customer{addresses}_Address{customer}" : {
+        "type" : "ManyToMany",
+        "name" : "ManyToMany_Customer{addresses}_Address{customer}",
+        "from" : "Customer",
+        "commentInFrom" : null,
+        "injectedFieldInFrom" : "addresses",
+        "fromOptions" : { },
+        "fromValidations" : { },
+        "injectedFieldInFromDescription" : null,
+        "isInjectedFieldInFromRequired" : false,
+        "to" : "Address",
+        "commentInTo" : null,
+        "injectedFieldInTo" : "customer",
+        "toOptions" : { },
+        "toValidations" : { },
+        "injectedFieldInToDescription" : null,
+        "isInjectedFieldInToRequired" : false
+      }
+    }
+  },
+  "services" : {
+    "OrdersService" : {
+      "name" : "OrdersService",
+      "className" : "OrdersService",
+      "javadoc" : null,
+      "aggregates" : [ "CustomerOrder" ],
+      "methods" : {
+        "getCustomerOrder" : {
+          "name" : "getCustomerOrder",
+          "serviceName" : "OrdersService",
+          "naturalId" : null,
+          "paramId" : "id",
+          "parameter" : null,
+          "returnType" : "CustomerOrder",
+          "returnTypeIsArray" : false,
+          "returnTypeIsOptional" : true,
+          "withEvents" : [ ],
+          "javadoc" : null,
+          "options" : {
+            "get" : "/{orderId}"
+          },
+          "optionsList" : [ {
+            "name" : "get",
+            "value" : "/{orderId}"
+          } ]
+        },
+        "createOrder" : {
+          "name" : "createOrder",
+          "serviceName" : "OrdersService",
+          "naturalId" : null,
+          "paramId" : null,
+          "parameter" : "CustomerOrderInput",
+          "returnType" : "CustomerOrder",
+          "returnTypeIsArray" : false,
+          "returnTypeIsOptional" : false,
+          "withEvents" : [ [ "OrderEvent", "OrderEventFailed" ] ],
+          "javadoc" : null,
+          "options" : {
+            "post" : true
+          },
+          "optionsList" : [ {
+            "name" : "post",
+            "value" : true
+          } ]
+        },
+        "updateOrder" : {
+          "name" : "updateOrder",
+          "serviceName" : "OrdersService",
+          "naturalId" : null,
+          "paramId" : "id",
+          "parameter" : "CustomerOrderInput",
+          "returnType" : "CustomerOrder",
+          "returnTypeIsArray" : false,
+          "returnTypeIsOptional" : false,
+          "withEvents" : [ "OrderEvent", "OrderStatusUpdated" ],
+          "javadoc" : null,
+          "options" : {
+            "put" : "/{orderId}"
+          },
+          "optionsList" : [ {
+            "name" : "put",
+            "value" : "/{orderId}"
+          } ]
+        },
+        "updateKitchenStatus" : {
+          "name" : "updateKitchenStatus",
+          "serviceName" : "OrdersService",
+          "naturalId" : null,
+          "paramId" : "id",
+          "parameter" : "KitchenStatusInput",
+          "returnType" : "CustomerOrder",
+          "returnTypeIsArray" : false,
+          "returnTypeIsOptional" : false,
+          "withEvents" : [ "OrderEvent", "OrderStatusUpdated" ],
+          "javadoc" : null,
+          "options" : {
+            "asyncapi" : {
+              "api" : "RestaurantsAsyncAPI",
+              "channel" : "KitchenOrdersStatusChannel"
+            }
+          },
+          "optionsList" : [ {
+            "name" : "asyncapi",
+            "value" : {
+              "api" : "RestaurantsAsyncAPI",
+              "channel" : "KitchenOrdersStatusChannel"
+            }
+          } ]
+        },
+        "updateDeliveryStatus" : {
+          "name" : "updateDeliveryStatus",
+          "serviceName" : "OrdersService",
+          "naturalId" : null,
+          "paramId" : "id",
+          "parameter" : "DeliveryStatusInput",
+          "returnType" : "CustomerOrder",
+          "returnTypeIsArray" : false,
+          "returnTypeIsOptional" : false,
+          "withEvents" : [ "OrderEvent", "OrderStatusUpdated" ],
+          "javadoc" : null,
+          "options" : {
+            "asyncapi" : {
+              "api" : "DeliveryAsyncAPI",
+              "channel" : "DeliveryStatusChannel"
+            }
+          },
+          "optionsList" : [ {
+            "name" : "asyncapi",
+            "value" : {
+              "api" : "DeliveryAsyncAPI",
+              "channel" : "DeliveryStatusChannel"
+            }
+          } ]
+        },
+        "cancelOrder" : {
+          "name" : "cancelOrder",
+          "serviceName" : "OrdersService",
+          "naturalId" : null,
+          "paramId" : "id",
+          "parameter" : "CancelOrderInput",
+          "returnType" : "CustomerOrder",
+          "returnTypeIsArray" : false,
+          "returnTypeIsOptional" : false,
+          "withEvents" : [ "OrderEvent", "OrderStatusUpdated" ],
+          "javadoc" : null,
+          "options" : {
+            "asyncapi" : {
+              "channel" : "CancelOrdersChannel",
+              "topic" : "orders.cancel_orders"
+            },
+            "put" : "/{orderId}/cancel"
+          },
+          "optionsList" : [ {
+            "name" : "asyncapi",
+            "value" : {
+              "channel" : "CancelOrdersChannel",
+              "topic" : "orders.cancel_orders"
+            }
+          }, {
+            "name" : "put",
+            "value" : "/{orderId}/cancel"
+          } ]
+        },
+        "searchOrders" : {
+          "name" : "searchOrders",
+          "serviceName" : "OrdersService",
+          "naturalId" : null,
+          "paramId" : null,
+          "parameter" : "OrdersFilter",
+          "returnType" : "CustomerOrder",
+          "returnTypeIsArray" : true,
+          "returnTypeIsOptional" : false,
+          "withEvents" : [ ],
+          "javadoc" : null,
+          "options" : {
+            "post" : {
+              "path" : "/search",
+              "params" : {
+                "param1" : "String",
+                "param2" : "Integer"
+              }
+            }
+          },
+          "optionsList" : [ {
+            "name" : "post",
+            "value" : {
+              "path" : "/search",
+              "params" : {
+                "param1" : "String",
+                "param2" : "Integer"
+              }
+            }
+          } ]
+        }
+      },
+      "options" : {
+        "rest" : "/orders"
+      },
+      "optionsList" : [ {
+        "name" : "rest",
+        "value" : "/orders"
+      } ]
+    },
+    "OrdersService2" : {
+      "name" : "OrdersService2",
+      "className" : "OrdersService2",
+      "javadoc" : null,
+      "aggregates" : [ "CustomerOrder", "Aggregate2" ],
+      "methods" : { }
+    }
+  },
+  "inputs" : {
+    "CustomerOrderInput" : {
+      "name" : "CustomerOrderInput",
+      "className" : "CustomerOrderInput",
+      "tableName" : "customer_order_input",
+      "instanceName" : "customerOrderInput",
+      "classNamePlural" : "CustomerOrderInputs",
+      "instanceNamePlural" : "customerOrderInputs",
+      "kebabCase" : "customer-order-input",
+      "kebabCasePlural" : "customer-order-inputs",
+      "javadoc" : null,
+      "options" : {
+        "array_annotation" : [ "item1", "item2", "item3" ],
+        "array2_annotation" : [ "item1", "item2", "item3" ],
+        "object_annotation" : {
+          "item1" : "value1",
+          "item2" : "value2",
+          "item3" : "value3"
+        },
+        "object_annotation_pairs" : {
+          "item1" : "value1",
+          "item2" : "value2",
+          "item3" : "value3"
+        },
+        "object_annotation_nested_array" : {
+          "item1" : "value1",
+          "item2" : "value2",
+          "item3" : [ "value1", "value2" ]
+        }
+      },
+      "fields" : {
+        "orderTime" : {
+          "name" : "orderTime",
+          "type" : "Instant",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "status" : {
+          "name" : "status",
+          "type" : "OrderStatus",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : true,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        },
+        "customerId" : {
+          "name" : "customerId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "restaurantId" : {
+          "name" : "restaurantId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "addressIdentifier" : {
+          "name" : "addressIdentifier",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "orderItems" : {
+          "name" : "orderItems",
+          "type" : "OrderItemInput",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : true,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            },
+            "minlength" : {
+              "value" : "1",
+              "name" : "minlength"
+            }
+          },
+          "isInput" : true,
+          "isComplexType" : true
+        }
+      },
+      "type" : "inputs",
+      "optionsList" : [ {
+        "name" : "array_annotation",
+        "value" : [ "item1", "item2", "item3" ]
+      }, {
+        "name" : "array2_annotation",
+        "value" : [ "item1", "item2", "item3" ]
+      }, {
+        "name" : "object_annotation",
+        "value" : {
+          "item1" : "value1",
+          "item2" : "value2",
+          "item3" : "value3"
+        }
+      }, {
+        "name" : "object_annotation_pairs",
+        "value" : {
+          "item1" : "value1",
+          "item2" : "value2",
+          "item3" : "value3"
+        }
+      }, {
+        "name" : "object_annotation_nested_array",
+        "value" : {
+          "item1" : "value1",
+          "item2" : "value2",
+          "item3" : [ "value1", "value2" ]
+        }
+      } ]
+    },
+    "OrderItemInput" : {
+      "name" : "OrderItemInput",
+      "className" : "OrderItemInput",
+      "tableName" : "order_item_input",
+      "instanceName" : "orderItemInput",
+      "classNamePlural" : "OrderItemInputs",
+      "instanceNamePlural" : "orderItemInputs",
+      "kebabCase" : "order-item-input",
+      "kebabCasePlural" : "order-item-inputs",
+      "javadoc" : null,
+      "options" : {
+        "embedded" : true
+      },
+      "fields" : {
+        "menuItemId" : {
+          "name" : "menuItemId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : "menuItemId javadoc",
+          "comment" : "menuItemId javadoc",
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "name" : {
+          "name" : "name",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : "",
+          "comment" : "",
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "description" : {
+          "name" : "description",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : "description javadoc",
+          "comment" : "description javadoc",
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "price" : {
+          "name" : "price",
+          "type" : "BigDecimal",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "quantity" : {
+          "name" : "quantity",
+          "type" : "Integer",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        }
+      },
+      "type" : "inputs"
+    },
+    "OrdersFilter" : {
+      "name" : "OrdersFilter",
+      "className" : "OrdersFilter",
+      "tableName" : "orders_filter",
+      "instanceName" : "ordersFilter",
+      "classNamePlural" : "OrdersFilters",
+      "instanceNamePlural" : "ordersFilters",
+      "kebabCase" : "orders-filter",
+      "kebabCasePlural" : "orders-filters",
+      "javadoc" : null,
+      "options" : { },
+      "fields" : {
+        "status" : {
+          "name" : "status",
+          "type" : "OrderStatus",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : true,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        },
+        "customerName" : {
+          "name" : "customerName",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "restaurantName" : {
+          "name" : "restaurantName",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        }
+      },
+      "type" : "inputs"
+    },
+    "KitchenStatusInput" : {
+      "name" : "KitchenStatusInput",
+      "className" : "KitchenStatusInput",
+      "tableName" : "kitchen_status_input",
+      "instanceName" : "kitchenStatusInput",
+      "classNamePlural" : "KitchenStatusInputs",
+      "instanceNamePlural" : "kitchenStatusInputs",
+      "kebabCase" : "kitchen-status-input",
+      "kebabCasePlural" : "kitchen-status-inputs",
+      "javadoc" : null,
+      "options" : { },
+      "fields" : {
+        "kitchenOrderId" : {
+          "name" : "kitchenOrderId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "kitchenStatus" : {
+          "name" : "kitchenStatus",
+          "type" : "KitchenStatus",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : true,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        }
+      },
+      "type" : "inputs"
+    },
+    "DeliveryStatusInput" : {
+      "name" : "DeliveryStatusInput",
+      "className" : "DeliveryStatusInput",
+      "tableName" : "delivery_status_input",
+      "instanceName" : "deliveryStatusInput",
+      "classNamePlural" : "DeliveryStatusInputs",
+      "instanceNamePlural" : "deliveryStatusInputs",
+      "kebabCase" : "delivery-status-input",
+      "kebabCasePlural" : "delivery-status-inputs",
+      "javadoc" : null,
+      "options" : { },
+      "fields" : {
+        "deliveryOrderId" : {
+          "name" : "deliveryOrderId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "deliveryStatus" : {
+          "name" : "deliveryStatus",
+          "type" : "DeliveryStatus",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : true,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        }
+      },
+      "type" : "inputs"
+    },
+    "CancelOrderInput" : {
+      "name" : "CancelOrderInput",
+      "className" : "CancelOrderInput",
+      "tableName" : "cancel_order_input",
+      "instanceName" : "cancelOrderInput",
+      "classNamePlural" : "CancelOrderInputs",
+      "instanceNamePlural" : "cancelOrderInputs",
+      "kebabCase" : "cancel-order-input",
+      "kebabCasePlural" : "cancel-order-inputs",
+      "javadoc" : null,
+      "options" : { },
+      "fields" : {
+        "id" : {
+          "name" : "id",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "reason" : {
+          "name" : "reason",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        }
+      },
+      "type" : "inputs"
+    }
+  },
+  "outputs" : {
+    "CustomerOrderOutput" : {
+      "name" : "CustomerOrderOutput",
+      "className" : "CustomerOrderOutput",
+      "tableName" : "customer_order_output",
+      "instanceName" : "customerOrderOutput",
+      "classNamePlural" : "CustomerOrderOutputs",
+      "instanceNamePlural" : "customerOrderOutputs",
+      "kebabCase" : "customer-order-output",
+      "kebabCasePlural" : "customer-order-outputs",
+      "javadoc" : "CustomerOrderOutput javadoc",
+      "options" : { },
+      "fields" : {
+        "field" : {
+          "name" : "field",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : "field javadoc",
+          "comment" : "field javadoc",
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "nestedOutput" : {
+          "name" : "nestedOutput",
+          "type" : "NestedOutput",
+          "initialValue" : null,
+          "javadoc" : "nested output javadoc",
+          "comment" : "nested output javadoc",
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          },
+          "isOutput" : true,
+          "isComplexType" : true
+        }
+      },
+      "type" : "outputs"
+    },
+    "NestedOutput" : {
+      "name" : "NestedOutput",
+      "className" : "NestedOutput",
+      "tableName" : "nested_output",
+      "instanceName" : "nestedOutput",
+      "classNamePlural" : "NestedOutputs",
+      "instanceNamePlural" : "nestedOutputs",
+      "kebabCase" : "nested-output",
+      "kebabCasePlural" : "nested-outputs",
+      "javadoc" : "nested output javadoc",
+      "options" : {
+        "embedded" : true
+      },
+      "fields" : {
+        "nestedField" : {
+          "name" : "nestedField",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        }
+      },
+      "type" : "outputs"
+    }
+  },
+  "events" : {
+    "OrderEvent" : {
+      "name" : "OrderEvent",
+      "className" : "OrderEvent",
+      "type" : "events",
+      "kebabCase" : "order-event",
+      "javadoc" : "OrderEvent javadoc",
+      "fields" : {
+        "id" : {
+          "name" : "id",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        }
+      },
+      "options" : {
+        "copy" : "CustomerOrder",
+        "asyncapi" : {
+          "channel" : "OrdersChannel",
+          "topic" : "orders.orders"
+        }
+      },
+      "optionsList" : [ {
+        "name" : "copy",
+        "value" : "CustomerOrder"
+      }, {
+        "name" : "asyncapi",
+        "value" : {
+          "channel" : "OrdersChannel",
+          "topic" : "orders.orders"
+        }
+      } ]
+    },
+    "OrderEventFailed" : {
+      "name" : "OrderEventFailed",
+      "className" : "OrderEventFailed",
+      "type" : "events",
+      "kebabCase" : "order-event-failed",
+      "javadoc" : null,
+      "fields" : {
+        "id" : {
+          "name" : "id",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "reason" : {
+          "name" : "reason",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        }
+      },
+      "options" : {
+        "copy" : "CustomerOrder",
+        "asyncapi" : {
+          "channel" : "OrdersChannel",
+          "topic" : "orders.orders"
+        }
+      },
+      "optionsList" : [ {
+        "name" : "copy",
+        "value" : "CustomerOrder"
+      }, {
+        "name" : "asyncapi",
+        "value" : {
+          "channel" : "OrdersChannel",
+          "topic" : "orders.orders"
+        }
+      } ]
+    },
+    "OrderStatusUpdated" : {
+      "name" : "OrderStatusUpdated",
+      "className" : "OrderStatusUpdated",
+      "type" : "events",
+      "kebabCase" : "order-status-updated",
+      "javadoc" : "OrderStatusUpdated javadoc",
+      "fields" : {
+        "id" : {
+          "name" : "id",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "dateTime" : {
+          "name" : "dateTime",
+          "type" : "Instant",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "status" : {
+          "name" : "status",
+          "type" : "OrderStatus",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : true,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        },
+        "previousStatus" : {
+          "name" : "previousStatus",
+          "type" : "OrderStatus",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : true,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        }
+      },
+      "options" : {
+        "asyncapi" : {
+          "channel" : "OrderUpdatesChannel",
+          "topic" : "orders.order_updates"
+        }
+      },
+      "optionsList" : [ {
+        "name" : "asyncapi",
+        "value" : {
+          "channel" : "OrderUpdatesChannel",
+          "topic" : "orders.order_updates"
+        }
+      } ]
+    },
+    "EventWithNestedOutputs" : {
+      "name" : "EventWithNestedOutputs",
+      "className" : "EventWithNestedOutputs",
+      "type" : "events",
+      "kebabCase" : "event-with-nested-outputs",
+      "javadoc" : null,
+      "fields" : {
+        "id" : {
+          "name" : "id",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "dateTime" : {
+          "name" : "dateTime",
+          "type" : "Instant",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "status" : {
+          "name" : "status",
+          "type" : "OrderStatus",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : true,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        },
+        "nestedObject" : {
+          "name" : "nestedObject",
+          "type" : "NestedObject",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isEvent" : true,
+          "isComplexType" : true
+        }
+      }
+    },
+    "NestedObject" : {
+      "name" : "NestedObject",
+      "className" : "NestedObject",
+      "tableName" : "nested_object",
+      "instanceName" : "nestedObject",
+      "classNamePlural" : "NestedObjects",
+      "instanceNamePlural" : "nestedObjects",
+      "kebabCase" : "nested-object",
+      "kebabCasePlural" : "nested-objects",
+      "javadoc" : null,
+      "options" : {
+        "embedded" : true
+      },
+      "fields" : {
+        "id" : {
+          "name" : "id",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "name" : {
+          "name" : "name",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        }
+      },
+      "type" : "events"
+    }
+  },
+  "locations" : {
+    "plugins.ZDLToOpenAPIPlugin" : [ 423, 560, 15, 8, 18, 8 ],
+    "plugins.ZDLToOpenAPIPlugin.name" : [ 423, 441, 15, 8, 15, 26 ],
+    "plugins.ZDLToAsyncAPIPlugin" : [ 572, 743, 20, 8, 24, 8 ],
+    "plugins.ZDLToAsyncAPIPlugin.name" : [ 572, 591, 20, 8, 20, 27 ],
+    "plugins.BackendApplicationDefaultPlugin" : [ 755, 923, 26, 8, 30, 8 ],
+    "plugins.BackendApplicationDefaultPlugin.name" : [ 755, 786, 26, 8, 26, 39 ],
+    "plugins.OpenAPIControllersPlugin" : [ 935, 1512, 32, 8, 42, 8 ],
+    "plugins.OpenAPIControllersPlugin.name" : [ 935, 959, 32, 8, 32, 32 ],
+    "plugins.SpringCloudStreams3AdaptersPlugin" : [ 1875, 2210, 51, 8, 57, 8 ],
+    "plugins.SpringCloudStreams3AdaptersPlugin.name" : [ 1875, 1908, 51, 8, 51, 41 ],
+    "apis.default" : [ 2238, 2332, 63, 4, 65, 4 ],
+    "apis.default.name" : [ 2257, 2264, 63, 23, 63, 30 ],
+    "apis.default.type" : [ 2238, 2246, 63, 4, 63, 12 ],
+    "apis.default.role" : [ 2247, 2255, 63, 13, 63, 21 ],
+    "apis.RestaurantsAsyncAPI" : [ 2338, 2447, 66, 4, 68, 4 ],
+    "apis.RestaurantsAsyncAPI.name" : [ 2355, 2374, 66, 21, 66, 40 ],
+    "apis.RestaurantsAsyncAPI.type" : [ 2338, 2346, 66, 4, 66, 12 ],
+    "apis.RestaurantsAsyncAPI.role" : [ 2347, 2353, 66, 13, 66, 19 ],
+    "apis.DeliveryAsyncAPI" : [ 2453, 2556, 69, 4, 71, 4 ],
+    "apis.DeliveryAsyncAPI.name" : [ 2470, 2486, 69, 21, 69, 37 ],
+    "apis.DeliveryAsyncAPI.type" : [ 2453, 2461, 69, 4, 69, 12 ],
+    "apis.DeliveryAsyncAPI.role" : [ 2462, 2468, 69, 13, 69, 19 ],
+    "aggregates.CustomerOrderAggregate" : [ 2611, 2731, 76, 0, 78, 0 ],
+    "aggregates.CustomerOrderAggregate.name" : [ 2621, 2643, 76, 10, 76, 32 ],
+    "aggregates.CustomerOrderAggregate.aggregateRoot" : [ 2644, 2657, 76, 33, 76, 46 ],
+    "aggregates.CustomerOrderAggregate.commands.customerOrderCommand.withEvents" : [ 2707, 2728, 77, 45, 77, 56 ],
+    "aggregates.CustomerOrderAggregate.commands.customerOrderCommand.withEvents.0" : [ 2718, 2728, 77, 56, 77, 66 ],
+    "aggregates.CustomerOrderAggregate.commands.customerOrderCommand.withEvents.OrderEvent" : [ 2718, 2728, 77, 56, 77, 66 ],
+    "aggregates.CustomerOrderAggregate.commands.customerOrderCommand" : [ 2666, 2728, 77, 4, 77, 56 ],
+    "aggregates.CustomerOrderAggregate.commands.customerOrderCommand.name" : [ 2666, 2686, 77, 4, 77, 24 ],
+    "aggregates.CustomerOrderAggregate.commands.customerOrderCommand.parameter" : [ 2687, 2705, 77, 25, 77, 43 ],
+    "entities.CustomerOrder" : [ 2735, 3837, 80, 0, 120, 0 ],
+    "entities.CustomerOrder.name" : [ 2754, 2767, 81, 7, 81, 20 ],
+    "entities.CustomerOrder.body" : [ 2768, 3837, 81, 21, 120, 0 ],
+    "entities.CustomerOrder.fields.orderTime" : [ 2775, 2844, 82, 4, 82, 49 ],
+    "entities.CustomerOrder.fields.orderTime.name" : [ 2775, 2784, 82, 4, 82, 13 ],
+    "entities.CustomerOrder.fields.orderTime.type" : [ 2785, 2792, 82, 14, 82, 21 ],
+    "entities.CustomerOrder.fields.orderTime.validations.required" : [ 2811, 2819, 82, 40, 82, 48 ],
+    "entities.CustomerOrder.fields.orderTime.javadoc" : [ 2820, 2844, 82, 49, 82, 73 ],
+    "entities.CustomerOrder.fields.status" : [ 2850, 2900, 83, 4, 83, 46 ],
+    "entities.CustomerOrder.fields.status.name" : [ 2850, 2856, 83, 4, 83, 10 ],
+    "entities.CustomerOrder.fields.status.type" : [ 2857, 2868, 83, 11, 83, 22 ],
+    "entities.CustomerOrder.fields.status.validations.required" : [ 2892, 2900, 83, 46, 83, 54 ],
+    "entities.CustomerOrder.fields.customerDetails" : [ 2906, 3283, 84, 4, 98, 4 ],
+    "entities.CustomerOrder.fields.customerDetails.name" : [ 2926, 2941, 85, 4, 85, 19 ],
+    "entities.CustomerOrder.fields.customerDetails.type" : [ 2942, 2950, 85, 20, 85, 28 ],
+    "entities.Customer" : [ 2942, 3283, 85, 20, 98, 4 ],
+    "entities.Customer.name" : [ 2942, 2950, 85, 20, 85, 28 ],
+    "entities.Customer.tableName" : [ 2951, 2965, 85, 29, 85, 43 ],
+    "entities.Customer.body" : [ 2967, 3283, 85, 45, 98, 4 ],
+    "entities.Customer.fields.customerId" : [ 2976, 3003, 86, 6, 86, 25 ],
+    "entities.Customer.fields.customerId.name" : [ 2976, 2986, 86, 6, 86, 16 ],
+    "entities.Customer.fields.customerId.type" : [ 2987, 2993, 86, 17, 86, 23 ],
+    "entities.Customer.fields.customerId.validations.required" : [ 2995, 3003, 86, 25, 86, 33 ],
+    "entities.Customer.fields.firstName" : [ 3011, 3036, 87, 6, 87, 23 ],
+    "entities.Customer.fields.firstName.name" : [ 3011, 3020, 87, 6, 87, 15 ],
+    "entities.Customer.fields.firstName.type" : [ 3021, 3027, 87, 16, 87, 22 ],
+    "entities.Customer.fields.firstName.validations.required" : [ 3028, 3036, 87, 23, 87, 31 ],
+    "entities.Customer.fields.lastName" : [ 3044, 3068, 88, 6, 88, 22 ],
+    "entities.Customer.fields.lastName.name" : [ 3044, 3052, 88, 6, 88, 14 ],
+    "entities.Customer.fields.lastName.type" : [ 3053, 3059, 88, 15, 88, 21 ],
+    "entities.Customer.fields.lastName.validations.required" : [ 3060, 3068, 88, 22, 88, 30 ],
+    "entities.Customer.fields.email" : [ 3076, 3097, 89, 6, 89, 19 ],
+    "entities.Customer.fields.email.name" : [ 3076, 3081, 89, 6, 89, 11 ],
+    "entities.Customer.fields.email.type" : [ 3082, 3088, 89, 12, 89, 18 ],
+    "entities.Customer.fields.email.validations.required" : [ 3089, 3097, 89, 19, 89, 27 ],
+    "entities.Customer.fields.phone" : [ 3105, 3126, 90, 6, 90, 19 ],
+    "entities.Customer.fields.phone.name" : [ 3105, 3110, 90, 6, 90, 11 ],
+    "entities.Customer.fields.phone.type" : [ 3111, 3117, 90, 12, 90, 18 ],
+    "entities.Customer.fields.phone.validations.required" : [ 3118, 3126, 90, 19, 90, 27 ],
+    "entities.Customer.fields.avatar" : [ 3134, 3147, 91, 6, 91, 17 ],
+    "entities.Customer.fields.avatar.name" : [ 3134, 3140, 91, 6, 91, 12 ],
+    "entities.Customer.fields.avatar.type" : [ 3141, 3147, 91, 13, 91, 17 ],
+    "entities.Customer.fields.address" : [ 3155, 3276, 92, 6, 97, 6 ],
+    "entities.Customer.fields.address.name" : [ 3155, 3162, 92, 6, 92, 13 ],
+    "entities.Customer.fields.address.type" : [ 3163, 3170, 92, 14, 92, 21 ],
+    "entities.Address" : [ 3430, 3543, 103, 16, 108, 6 ],
+    "entities.Address.name" : [ 3430, 3437, 103, 16, 103, 23 ],
+    "entities.Address.body" : [ 3438, 3543, 103, 24, 108, 6 ],
+    "entities.Address.fields.street" : [ 3449, 3471, 104, 8, 104, 22 ],
+    "entities.Address.fields.street.name" : [ 3449, 3455, 104, 8, 104, 14 ],
+    "entities.Address.fields.street.type" : [ 3456, 3462, 104, 15, 104, 21 ],
+    "entities.Address.fields.street.validations.required" : [ 3463, 3471, 104, 22, 104, 30 ],
+    "entities.Address.fields.city" : [ 3481, 3492, 105, 8, 105, 13 ],
+    "entities.Address.fields.city.name" : [ 3481, 3485, 105, 8, 105, 12 ],
+    "entities.Address.fields.city.type" : [ 3486, 3492, 105, 13, 105, 19 ],
+    "entities.Address.fields.state" : [ 3502, 3514, 106, 8, 106, 14 ],
+    "entities.Address.fields.state.name" : [ 3502, 3507, 106, 8, 106, 13 ],
+    "entities.Address.fields.state.type" : [ 3508, 3514, 106, 14, 106, 20 ],
+    "entities.Address.fields.zip" : [ 3524, 3534, 107, 8, 107, 12 ],
+    "entities.Address.fields.zip.name" : [ 3524, 3527, 107, 8, 107, 11 ],
+    "entities.Address.fields.zip.type" : [ 3528, 3534, 107, 12, 107, 18 ],
+    "entities.CustomerOrder.fields.restaurantDetails" : [ 3289, 3550, 99, 4, 109, 4 ],
+    "entities.CustomerOrder.fields.restaurantDetails.name" : [ 3289, 3306, 99, 4, 99, 21 ],
+    "entities.CustomerOrder.fields.restaurantDetails.type" : [ 3307, 3317, 99, 22, 99, 32 ],
+    "entities.Restaurant" : [ 3307, 3550, 99, 22, 109, 4 ],
+    "entities.Restaurant.name" : [ 3307, 3317, 99, 22, 99, 32 ],
+    "entities.Restaurant.body" : [ 3318, 3550, 99, 33, 109, 4 ],
+    "entities.Restaurant.fields.restaurantId" : [ 3327, 3355, 100, 6, 100, 26 ],
+    "entities.Restaurant.fields.restaurantId.name" : [ 3327, 3339, 100, 6, 100, 18 ],
+    "entities.Restaurant.fields.restaurantId.type" : [ 3340, 3346, 100, 19, 100, 25 ],
+    "entities.Restaurant.fields.restaurantId.validations.required" : [ 3347, 3355, 100, 26, 100, 34 ],
+    "entities.Restaurant.fields.name" : [ 3363, 3383, 101, 6, 101, 18 ],
+    "entities.Restaurant.fields.name.name" : [ 3363, 3367, 101, 6, 101, 10 ],
+    "entities.Restaurant.fields.name.type" : [ 3368, 3374, 101, 11, 101, 17 ],
+    "entities.Restaurant.fields.name.validations.required" : [ 3375, 3383, 101, 18, 101, 26 ],
+    "entities.Restaurant.fields.phone" : [ 3391, 3412, 102, 6, 102, 19 ],
+    "entities.Restaurant.fields.phone.name" : [ 3391, 3396, 102, 6, 102, 11 ],
+    "entities.Restaurant.fields.phone.type" : [ 3397, 3403, 102, 12, 102, 18 ],
+    "entities.Restaurant.fields.phone.validations.required" : [ 3404, 3412, 102, 19, 102, 27 ],
+    "entities.Restaurant.fields.addresses" : [ 3420, 3543, 103, 6, 108, 6 ],
+    "entities.Restaurant.fields.addresses.name" : [ 3420, 3429, 103, 6, 103, 15 ],
+    "entities.Restaurant.fields.addresses.type" : [ 3430, 3437, 103, 16, 103, 23 ],
+    "entities.CustomerOrder.fields.orderItems" : [ 3556, 3834, 110, 4, 119, 19 ],
+    "entities.CustomerOrder.fields.orderItems.name" : [ 3601, 3611, 113, 4, 113, 14 ],
+    "entities.CustomerOrder.fields.orderItems.type" : [ 3612, 3623, 113, 15, 113, 24 ],
+    "entities.CustomerOrder.fields.orderItems.validations.minlength" : [ 3624, 3636, 113, 27, 113, 38 ],
+    "entities.CustomerOrder.fields.orderItems.validations.maxlength" : [ 3637, 3651, 113, 40, 113, 53 ],
+    "entities.CustomerOrder.fields.orderItems.javadoc" : [ 3556, 3595, 110, 4, 110, 43 ],
+    "entities.OrderItem" : [ 3612, 3834, 113, 15, 119, 19 ],
+    "entities.OrderItem.name" : [ 3612, 3623, 113, 15, 113, 24 ],
+    "entities.OrderItem.body" : [ 3652, 3834, 113, 55, 119, 19 ],
+    "entities.OrderItem.fields.menuItemId" : [ 3662, 3688, 114, 7, 114, 25 ],
+    "entities.OrderItem.fields.menuItemId.name" : [ 3662, 3672, 114, 7, 114, 17 ],
+    "entities.OrderItem.fields.menuItemId.type" : [ 3673, 3679, 114, 18, 114, 24 ],
+    "entities.OrderItem.fields.menuItemId.validations.required" : [ 3680, 3688, 114, 25, 114, 33 ],
+    "entities.OrderItem.fields.name" : [ 3697, 3717, 115, 7, 115, 19 ],
+    "entities.OrderItem.fields.name.name" : [ 3697, 3701, 115, 7, 115, 11 ],
+    "entities.OrderItem.fields.name.type" : [ 3702, 3708, 115, 12, 115, 18 ],
+    "entities.OrderItem.fields.name.validations.required" : [ 3709, 3717, 115, 19, 115, 27 ],
+    "entities.OrderItem.fields.description" : [ 3726, 3744, 116, 7, 116, 19 ],
+    "entities.OrderItem.fields.description.name" : [ 3726, 3737, 116, 7, 116, 18 ],
+    "entities.OrderItem.fields.description.type" : [ 3738, 3744, 116, 19, 116, 25 ],
+    "entities.OrderItem.fields.price" : [ 3753, 3778, 117, 7, 117, 24 ],
+    "entities.OrderItem.fields.price.name" : [ 3753, 3758, 117, 7, 117, 12 ],
+    "entities.OrderItem.fields.price.type" : [ 3759, 3769, 117, 13, 117, 23 ],
+    "entities.OrderItem.fields.price.validations.required" : [ 3770, 3778, 117, 24, 117, 32 ],
+    "entities.OrderItem.fields.quantity" : [ 3787, 3812, 118, 7, 118, 24 ],
+    "entities.OrderItem.fields.quantity.name" : [ 3787, 3795, 118, 7, 118, 15 ],
+    "entities.OrderItem.fields.quantity.type" : [ 3796, 3803, 118, 16, 118, 23 ],
+    "entities.OrderItem.fields.quantity.validations.required" : [ 3804, 3812, 118, 24, 118, 32 ],
+    "entities.Aggregate2" : [ 3841, 3875, 122, 0, 124, 0 ],
+    "entities.Aggregate2.name" : [ 3860, 3870, 123, 7, 123, 17 ],
+    "entities.Aggregate2.body" : [ 3871, 3875, 123, 18, 124, 0 ],
+    "enums.OrderStatus" : [ 3879, 4062, 126, 0, 130, 0 ],
+    "enums.OrderStatus.name" : [ 3884, 3895, 126, 5, 126, 16 ],
+    "enums.OrderStatus.body" : [ 3896, 4062, 126, 17, 130, 0 ],
+    "enums.EnumWithValue" : [ 4066, 4115, 132, 0, 134, 0 ],
+    "enums.EnumWithValue.name" : [ 4071, 4084, 132, 5, 132, 18 ],
+    "enums.EnumWithValue.body" : [ 4085, 4115, 132, 19, 134, 0 ],
+    "relationships.ManyToOne_Address{customer}_Customer" : [ 4222, 4302, 138, 4, 141, 25 ],
+    "relationships.ManyToOne_Address{customer}_Customer.from.entity" : [ 4273, 4280, 141, 4, 141, 11 ],
+    "relationships.ManyToOne_Address{customer}_Customer.from.field" : [ 4281, 4289, 141, 12, 141, 20 ],
+    "relationships.ManyToOne_Address{customer}_Customer.from.validations" : [ 4289, 4289, 141, 20, 141, 12 ],
+    "relationships.ManyToOne_Address{customer}_Customer.to.entity" : [ 4294, 4302, 141, 25, 141, 33 ],
+    "relationships.ManyToOne_Address{customer2}_Customer" : [ 4337, 4376, 144, 4, 144, 35 ],
+    "relationships.ManyToOne_Address{customer2}_Customer.from.entity" : [ 4337, 4344, 144, 4, 144, 11 ],
+    "relationships.ManyToOne_Address{customer2}_Customer.from.field" : [ 4345, 4354, 144, 12, 144, 21 ],
+    "relationships.ManyToOne_Address{customer2}_Customer.from.validations" : [ 4355, 4363, 144, 22, 144, 30 ],
+    "relationships.ManyToOne_Address{customer2}_Customer.to.entity" : [ 4368, 4376, 144, 35, 144, 43 ],
+    "relationships.ManyToOne_Address{customer3}_Customer" : [ 4382, 4431, 145, 4, 145, 45 ],
+    "relationships.ManyToOne_Address{customer3}_Customer.from.entity" : [ 4382, 4389, 145, 4, 145, 11 ],
+    "relationships.ManyToOne_Address{customer3}_Customer.from.field" : [ 4390, 4399, 145, 12, 145, 21 ],
+    "relationships.ManyToOne_Address{customer3}_Customer.from.validations" : [ 4410, 4418, 145, 32, 145, 40 ],
+    "relationships.ManyToOne_Address{customer3}_Customer.to.entity" : [ 4423, 4431, 145, 45, 145, 53 ],
+    "relationships.OneToMany_Customer{addresses}_Address{customer}" : [ 4466, 4548, 148, 4, 148, 85 ],
+    "relationships.OneToMany_Customer{addresses}_Address{customer}.from.entity" : [ 4466, 4474, 148, 4, 148, 12 ],
+    "relationships.OneToMany_Customer{addresses}_Address{customer}.from.field" : [ 4475, 4484, 148, 13, 148, 22 ],
+    "relationships.OneToMany_Customer{addresses}_Address{customer}.from.validations" : [ 4494, 4494, 148, 32, 148, 31 ],
+    "relationships.OneToMany_Customer{addresses}_Address{customer}.to.entity" : [ 4531, 4538, 148, 69, 148, 76 ],
+    "relationships.OneToMany_Customer{addresses}_Address{customer}.to.field" : [ 4539, 4547, 148, 77, 148, 85 ],
+    "relationships.OneToMany_Customer{addresses}_Address{customer}.to.validations" : [ 4547, 4547, 148, 85, 148, 77 ],
+    "relationships.OneToOne_Customer{address}_Address{customer}" : [ 4582, 4659, 151, 4, 151, 80 ],
+    "relationships.OneToOne_Customer{address}_Address{customer}.from.entity" : [ 4582, 4590, 151, 4, 151, 12 ],
+    "relationships.OneToOne_Customer{address}_Address{customer}.from.field" : [ 4591, 4598, 151, 13, 151, 20 ],
+    "relationships.OneToOne_Customer{address}_Address{customer}.from.validations" : [ 4599, 4633, 151, 21, 151, 54 ],
+    "relationships.OneToOne_Customer{address}_Address{customer}.from.validations.min" : [ 4608, 4620, 151, 30, 151, 41 ],
+    "relationships.OneToOne_Customer{address}_Address{customer}.from.validations.max" : [ 4621, 4633, 151, 43, 151, 54 ],
+    "relationships.OneToOne_Customer{address}_Address{customer}.to.entity" : [ 4642, 4649, 151, 64, 151, 71 ],
+    "relationships.OneToOne_Customer{address}_Address{customer}.to.field" : [ 4650, 4658, 151, 72, 151, 80 ],
+    "relationships.OneToOne_Customer{address}_Address{customer}.to.validations" : [ 4658, 4658, 151, 80, 151, 72 ],
+    "relationships.ManyToMany_Customer{addresses}_Address{customer}" : [ 4695, 4735, 154, 4, 154, 43 ],
+    "relationships.ManyToMany_Customer{addresses}_Address{customer}.from.entity" : [ 4695, 4703, 154, 4, 154, 12 ],
+    "relationships.ManyToMany_Customer{addresses}_Address{customer}.from.field" : [ 4704, 4713, 154, 13, 154, 22 ],
+    "relationships.ManyToMany_Customer{addresses}_Address{customer}.from.validations" : [ 4713, 4713, 154, 22, 154, 13 ],
+    "relationships.ManyToMany_Customer{addresses}_Address{customer}.to.entity" : [ 4718, 4725, 154, 27, 154, 34 ],
+    "relationships.ManyToMany_Customer{addresses}_Address{customer}.to.field" : [ 4726, 4734, 154, 35, 154, 43 ],
+    "relationships.ManyToMany_Customer{addresses}_Address{customer}.to.validations" : [ 4734, 4734, 154, 43, 154, 35 ],
+    "inputs.CustomerOrderInput.fields.orderTime" : [ 5132, 5149, 165, 4, 165, 14 ],
+    "inputs.CustomerOrderInput.fields.orderTime.name" : [ 5132, 5141, 165, 4, 165, 13 ],
+    "inputs.CustomerOrderInput.fields.orderTime.type" : [ 5142, 5149, 165, 14, 165, 21 ],
+    "inputs.CustomerOrderInput.fields.status" : [ 5155, 5173, 166, 4, 166, 11 ],
+    "inputs.CustomerOrderInput.fields.status.name" : [ 5155, 5161, 166, 4, 166, 10 ],
+    "inputs.CustomerOrderInput.fields.status.type" : [ 5162, 5173, 166, 11, 166, 22 ],
+    "inputs.CustomerOrderInput.fields.customerId" : [ 5179, 5205, 167, 4, 167, 22 ],
+    "inputs.CustomerOrderInput.fields.customerId.name" : [ 5179, 5189, 167, 4, 167, 14 ],
+    "inputs.CustomerOrderInput.fields.customerId.type" : [ 5190, 5196, 167, 15, 167, 21 ],
+    "inputs.CustomerOrderInput.fields.customerId.validations.required" : [ 5197, 5205, 167, 22, 167, 30 ],
+    "inputs.CustomerOrderInput.fields.restaurantId" : [ 5211, 5239, 168, 4, 168, 24 ],
+    "inputs.CustomerOrderInput.fields.restaurantId.name" : [ 5211, 5223, 168, 4, 168, 16 ],
+    "inputs.CustomerOrderInput.fields.restaurantId.type" : [ 5224, 5230, 168, 17, 168, 23 ],
+    "inputs.CustomerOrderInput.fields.restaurantId.validations.required" : [ 5231, 5239, 168, 24, 168, 32 ],
+    "inputs.CustomerOrderInput.fields.addressIdentifier" : [ 5245, 5278, 169, 4, 169, 29 ],
+    "inputs.CustomerOrderInput.fields.addressIdentifier.name" : [ 5245, 5262, 169, 4, 169, 21 ],
+    "inputs.CustomerOrderInput.fields.addressIdentifier.type" : [ 5263, 5269, 169, 22, 169, 28 ],
+    "inputs.CustomerOrderInput.fields.addressIdentifier.validations.required" : [ 5270, 5278, 169, 29, 169, 37 ],
+    "inputs.CustomerOrderInput.fields.orderItems" : [ 5284, 5562, 170, 4, 177, 4 ],
+    "inputs.CustomerOrderInput.fields.orderItems.name" : [ 5284, 5294, 170, 4, 170, 14 ],
+    "inputs.CustomerOrderInput.fields.orderItems.type" : [ 5295, 5311, 170, 15, 170, 29 ],
+    "inputs.CustomerOrderInput.fields.orderItems.validations.required" : [ 5312, 5320, 170, 32, 170, 40 ],
+    "inputs.CustomerOrderInput.fields.orderItems.validations.minlength" : [ 5321, 5333, 170, 41, 170, 52 ],
+    "inputs.OrderItemInput" : [ 5295, 5562, 170, 15, 177, 4 ],
+    "inputs.OrderItemInput.name" : [ 5295, 5311, 170, 15, 170, 29 ],
+    "inputs.OrderItemInput.body" : [ 5334, 5562, 170, 54, 177, 4 ],
+    "inputs.OrderItemInput.fields.menuItemId" : [ 5344, 5396, 171, 7, 171, 34 ],
+    "inputs.OrderItemInput.fields.menuItemId.name" : [ 5344, 5354, 171, 7, 171, 17 ],
+    "inputs.OrderItemInput.fields.menuItemId.type" : [ 5355, 5361, 171, 18, 171, 24 ],
+    "inputs.OrderItemInput.fields.menuItemId.validations.required" : [ 5362, 5370, 171, 25, 171, 33 ],
+    "inputs.OrderItemInput.fields.menuItemId.javadoc" : [ 5371, 5396, 171, 34, 171, 59 ],
+    "inputs.OrderItemInput.fields.name" : [ 5405, 5425, 172, 7, 172, 19 ],
+    "inputs.OrderItemInput.fields.name.name" : [ 5405, 5409, 172, 7, 172, 11 ],
+    "inputs.OrderItemInput.fields.name.type" : [ 5410, 5416, 172, 12, 172, 18 ],
+    "inputs.OrderItemInput.fields.name.validations.required" : [ 5417, 5425, 172, 19, 172, 27 ],
+    "inputs.OrderItemInput.fields.name.javadoc" : [ 5434, 5425, 173, 7, 172, 19 ],
+    "inputs.OrderItemInput.fields.description" : [ 5434, 5487, 173, 7, 174, 19 ],
+    "inputs.OrderItemInput.fields.description.name" : [ 5469, 5480, 174, 7, 174, 18 ],
+    "inputs.OrderItemInput.fields.description.type" : [ 5481, 5487, 174, 19, 174, 25 ],
+    "inputs.OrderItemInput.fields.description.javadoc" : [ 5434, 5460, 173, 7, 173, 33 ],
+    "inputs.OrderItemInput.fields.price" : [ 5496, 5521, 175, 7, 175, 24 ],
+    "inputs.OrderItemInput.fields.price.name" : [ 5496, 5501, 175, 7, 175, 12 ],
+    "inputs.OrderItemInput.fields.price.type" : [ 5502, 5512, 175, 13, 175, 23 ],
+    "inputs.OrderItemInput.fields.price.validations.required" : [ 5513, 5521, 175, 24, 175, 32 ],
+    "inputs.OrderItemInput.fields.quantity" : [ 5530, 5555, 176, 7, 176, 24 ],
+    "inputs.OrderItemInput.fields.quantity.name" : [ 5530, 5538, 176, 7, 176, 15 ],
+    "inputs.OrderItemInput.fields.quantity.type" : [ 5539, 5546, 176, 16, 176, 23 ],
+    "inputs.OrderItemInput.fields.quantity.validations.required" : [ 5547, 5555, 176, 24, 176, 32 ],
+    "inputs.OrdersFilter.fields.status" : [ 5595, 5613, 181, 4, 181, 11 ],
+    "inputs.OrdersFilter.fields.status.name" : [ 5595, 5601, 181, 4, 181, 10 ],
+    "inputs.OrdersFilter.fields.status.type" : [ 5602, 5613, 181, 11, 181, 22 ],
+    "inputs.OrdersFilter.fields.customerName" : [ 5619, 5638, 182, 4, 182, 17 ],
+    "inputs.OrdersFilter.fields.customerName.name" : [ 5619, 5631, 182, 4, 182, 16 ],
+    "inputs.OrdersFilter.fields.customerName.type" : [ 5632, 5638, 182, 17, 182, 23 ],
+    "inputs.OrdersFilter.fields.restaurantName" : [ 5644, 5665, 183, 4, 183, 19 ],
+    "inputs.OrdersFilter.fields.restaurantName.name" : [ 5644, 5658, 183, 4, 183, 18 ],
+    "inputs.OrdersFilter.fields.restaurantName.type" : [ 5659, 5665, 183, 19, 183, 25 ],
+    "inputs.KitchenStatusInput.fields.kitchenOrderId" : [ 5704, 5725, 187, 4, 187, 19 ],
+    "inputs.KitchenStatusInput.fields.kitchenOrderId.name" : [ 5704, 5718, 187, 4, 187, 18 ],
+    "inputs.KitchenStatusInput.fields.kitchenOrderId.type" : [ 5719, 5725, 187, 19, 187, 25 ],
+    "inputs.KitchenStatusInput.fields.kitchenStatus" : [ 5731, 5758, 188, 4, 188, 18 ],
+    "inputs.KitchenStatusInput.fields.kitchenStatus.name" : [ 5731, 5744, 188, 4, 188, 17 ],
+    "inputs.KitchenStatusInput.fields.kitchenStatus.type" : [ 5745, 5758, 188, 18, 188, 31 ],
+    "inputs.DeliveryStatusInput.fields.deliveryOrderId" : [ 5798, 5820, 192, 4, 192, 20 ],
+    "inputs.DeliveryStatusInput.fields.deliveryOrderId.name" : [ 5798, 5813, 192, 4, 192, 19 ],
+    "inputs.DeliveryStatusInput.fields.deliveryOrderId.type" : [ 5814, 5820, 192, 20, 192, 26 ],
+    "inputs.DeliveryStatusInput.fields.deliveryStatus" : [ 5826, 5855, 193, 4, 193, 19 ],
+    "inputs.DeliveryStatusInput.fields.deliveryStatus.name" : [ 5826, 5840, 193, 4, 193, 18 ],
+    "inputs.DeliveryStatusInput.fields.deliveryStatus.type" : [ 5841, 5855, 193, 19, 193, 33 ],
+    "inputs.CancelOrderInput.fields.id" : [ 5892, 5901, 197, 4, 197, 7 ],
+    "inputs.CancelOrderInput.fields.id.name" : [ 5892, 5894, 197, 4, 197, 6 ],
+    "inputs.CancelOrderInput.fields.id.type" : [ 5895, 5901, 197, 7, 197, 13 ],
+    "inputs.CancelOrderInput.fields.reason" : [ 5907, 5920, 198, 4, 198, 11 ],
+    "inputs.CancelOrderInput.fields.reason.name" : [ 5907, 5913, 198, 4, 198, 10 ],
+    "inputs.CancelOrderInput.fields.reason.type" : [ 5914, 5920, 198, 11, 198, 17 ],
+    "enums.KitchenStatus" : [ 5927, 6024, 201, 0, 204, 0 ],
+    "enums.KitchenStatus.name" : [ 5940, 5953, 202, 5, 202, 18 ],
+    "enums.KitchenStatus.body" : [ 5954, 6024, 202, 19, 204, 0 ],
+    "enums.DeliveryStatus" : [ 6028, 6119, 206, 0, 209, 0 ],
+    "enums.DeliveryStatus.name" : [ 6041, 6055, 207, 5, 207, 19 ],
+    "enums.DeliveryStatus.body" : [ 6056, 6119, 207, 20, 209, 0 ],
+    "services.OrdersService" : [ 6123, 7173, 211, 0, 231, 0 ],
+    "services.OrdersService.name" : [ 6149, 6162, 212, 8, 212, 21 ],
+    "services.OrdersService.aggregates" : [ 6168, 6181, 212, 27, 212, 40 ],
+    "services.OrdersService.methods.getCustomerOrder" : [ 6190, 6249, 213, 4, 214, 38 ],
+    "services.OrdersService.methods.getCustomerOrder.name" : [ 6214, 6230, 214, 4, 214, 20 ],
+    "services.OrdersService.methods.getCustomerOrder.returnType" : [ 6235, 6249, 214, 25, 214, 38 ],
+    "services.OrdersService.methods.createOrder.withEvents" : [ 6312, 6352, 216, 50, 216, 89 ],
+    "services.OrdersService.methods.createOrder.withEvents.0.0" : [ 6324, 6334, 216, 62, 216, 72 ],
+    "services.OrdersService.methods.createOrder.withEvents.OrderEvent" : [ 6324, 6334, 216, 62, 216, 72 ],
+    "services.OrdersService.methods.createOrder.withEvents.0.1" : [ 6335, 6351, 216, 73, 216, 89 ],
+    "services.OrdersService.methods.createOrder.withEvents.OrderEventFailed" : [ 6335, 6351, 216, 73, 216, 89 ],
+    "services.OrdersService.methods.createOrder" : [ 6255, 6352, 215, 4, 216, 89 ],
+    "services.OrdersService.methods.createOrder.name" : [ 6266, 6277, 216, 4, 216, 15 ],
+    "services.OrdersService.methods.createOrder.parameter" : [ 6278, 6296, 216, 16, 216, 34 ],
+    "services.OrdersService.methods.createOrder.returnType" : [ 6298, 6311, 216, 36, 216, 49 ],
+    "services.OrdersService.methods.updateOrder.withEvents" : [ 6432, 6472, 218, 54, 218, 76 ],
+    "services.OrdersService.methods.updateOrder.withEvents.0" : [ 6443, 6453, 218, 65, 218, 75 ],
+    "services.OrdersService.methods.updateOrder.withEvents.OrderEvent" : [ 6443, 6453, 218, 65, 218, 75 ],
+    "services.OrdersService.methods.updateOrder.withEvents.1" : [ 6454, 6472, 218, 76, 218, 94 ],
+    "services.OrdersService.methods.updateOrder.withEvents.OrderStatusUpdated" : [ 6454, 6472, 218, 76, 218, 94 ],
+    "services.OrdersService.methods.updateOrder" : [ 6358, 6472, 217, 4, 218, 76 ],
+    "services.OrdersService.methods.updateOrder.name" : [ 6382, 6393, 218, 4, 218, 15 ],
+    "services.OrdersService.methods.updateOrder.parameter" : [ 6398, 6416, 218, 20, 218, 38 ],
+    "services.OrdersService.methods.updateOrder.returnType" : [ 6418, 6431, 218, 40, 218, 53 ],
+    "services.OrdersService.methods.updateKitchenStatus.withEvents" : [ 6620, 6660, 221, 62, 221, 84 ],
+    "services.OrdersService.methods.updateKitchenStatus.withEvents.0" : [ 6631, 6641, 221, 73, 221, 83 ],
+    "services.OrdersService.methods.updateKitchenStatus.withEvents.OrderEvent" : [ 6631, 6641, 221, 73, 221, 83 ],
+    "services.OrdersService.methods.updateKitchenStatus.withEvents.1" : [ 6642, 6660, 221, 84, 221, 102 ],
+    "services.OrdersService.methods.updateKitchenStatus.withEvents.OrderStatusUpdated" : [ 6642, 6660, 221, 84, 221, 102 ],
+    "services.OrdersService.methods.updateKitchenStatus" : [ 6480, 6660, 220, 4, 221, 84 ],
+    "services.OrdersService.methods.updateKitchenStatus.name" : [ 6562, 6581, 221, 4, 221, 23 ],
+    "services.OrdersService.methods.updateKitchenStatus.parameter" : [ 6586, 6604, 221, 28, 221, 46 ],
+    "services.OrdersService.methods.updateKitchenStatus.returnType" : [ 6606, 6619, 221, 48, 221, 61 ],
+    "services.OrdersService.methods.updateDeliveryStatus.withEvents" : [ 6800, 6840, 223, 64, 223, 86 ],
+    "services.OrdersService.methods.updateDeliveryStatus.withEvents.0" : [ 6811, 6821, 223, 75, 223, 85 ],
+    "services.OrdersService.methods.updateDeliveryStatus.withEvents.OrderEvent" : [ 6811, 6821, 223, 75, 223, 85 ],
+    "services.OrdersService.methods.updateDeliveryStatus.withEvents.1" : [ 6822, 6840, 223, 86, 223, 104 ],
+    "services.OrdersService.methods.updateDeliveryStatus.withEvents.OrderStatusUpdated" : [ 6822, 6840, 223, 86, 223, 104 ],
+    "services.OrdersService.methods.updateDeliveryStatus" : [ 6666, 6840, 222, 4, 223, 86 ],
+    "services.OrdersService.methods.updateDeliveryStatus.name" : [ 6740, 6760, 223, 4, 223, 24 ],
+    "services.OrdersService.methods.updateDeliveryStatus.parameter" : [ 6765, 6784, 223, 29, 223, 48 ],
+    "services.OrdersService.methods.updateDeliveryStatus.returnType" : [ 6786, 6799, 223, 50, 223, 63 ],
+    "services.OrdersService.methods.cancelOrder.withEvents" : [ 7007, 7047, 227, 52, 227, 74 ],
+    "services.OrdersService.methods.cancelOrder.withEvents.0" : [ 7018, 7028, 227, 63, 227, 73 ],
+    "services.OrdersService.methods.cancelOrder.withEvents.OrderEvent" : [ 7018, 7028, 227, 63, 227, 73 ],
+    "services.OrdersService.methods.cancelOrder.withEvents.1" : [ 7029, 7047, 227, 74, 227, 92 ],
+    "services.OrdersService.methods.cancelOrder.withEvents.OrderStatusUpdated" : [ 7029, 7047, 227, 74, 227, 92 ],
+    "services.OrdersService.methods.cancelOrder" : [ 6848, 7047, 225, 4, 227, 74 ],
+    "services.OrdersService.methods.cancelOrder.name" : [ 6959, 6970, 227, 4, 227, 15 ],
+    "services.OrdersService.methods.cancelOrder.parameter" : [ 6975, 6991, 227, 20, 227, 36 ],
+    "services.OrdersService.methods.cancelOrder.returnType" : [ 6993, 7006, 227, 38, 227, 51 ],
+    "services.OrdersService.methods.searchOrders" : [ 7055, 7170, 229, 4, 230, 44 ],
+    "services.OrdersService.methods.searchOrders.name" : [ 7128, 7140, 230, 4, 230, 16 ],
+    "services.OrdersService.methods.searchOrders.parameter" : [ 7141, 7153, 230, 17, 230, 29 ],
+    "services.OrdersService.methods.searchOrders.returnType" : [ 7155, 7170, 230, 31, 230, 44 ],
+    "services.OrdersService2" : [ 7177, 7238, 233, 0, 235, 0 ],
+    "services.OrdersService2.name" : [ 7185, 7199, 233, 8, 233, 22 ],
+    "services.OrdersService2.aggregates" : [ 7205, 7230, 233, 28, 233, 43 ],
+    "outputs.CustomerOrderOutput.fields.field" : [ 7312, 7345, 239, 4, 239, 17 ],
+    "outputs.CustomerOrderOutput.fields.field.name" : [ 7312, 7317, 239, 4, 239, 9 ],
+    "outputs.CustomerOrderOutput.fields.field.type" : [ 7318, 7324, 239, 10, 239, 16 ],
+    "outputs.CustomerOrderOutput.fields.field.javadoc" : [ 7325, 7345, 239, 17, 239, 37 ],
+    "outputs.CustomerOrderOutput.fields.nestedOutput" : [ 7351, 7456, 240, 4, 243, 4 ],
+    "outputs.CustomerOrderOutput.fields.nestedOutput.name" : [ 7385, 7397, 241, 4, 241, 16 ],
+    "outputs.CustomerOrderOutput.fields.nestedOutput.type" : [ 7398, 7410, 241, 17, 241, 29 ],
+    "outputs.CustomerOrderOutput.fields.nestedOutput.validations.required" : [ 7411, 7419, 241, 30, 241, 38 ],
+    "outputs.CustomerOrderOutput.fields.nestedOutput.javadoc" : [ 7351, 7379, 240, 4, 240, 32 ],
+    "outputs.NestedOutput" : [ 7398, 7456, 241, 17, 243, 4 ],
+    "outputs.NestedOutput.name" : [ 7398, 7410, 241, 17, 241, 29 ],
+    "outputs.NestedOutput.body" : [ 7420, 7456, 241, 39, 243, 4 ],
+    "outputs.NestedOutput.fields.nestedField" : [ 7431, 7449, 242, 8, 242, 20 ],
+    "outputs.NestedOutput.fields.nestedField.name" : [ 7431, 7442, 242, 8, 242, 19 ],
+    "outputs.NestedOutput.fields.nestedField.type" : [ 7443, 7449, 242, 20, 242, 26 ],
+    "events.OrderEvent.fields.id" : [ 7604, 7613, 252, 3, 252, 6 ],
+    "events.OrderEvent.fields.id.name" : [ 7604, 7606, 252, 3, 252, 5 ],
+    "events.OrderEvent.fields.id.type" : [ 7607, 7613, 252, 6, 252, 12 ],
+    "events.OrderEventFailed.fields.id" : [ 7798, 7807, 259, 3, 259, 6 ],
+    "events.OrderEventFailed.fields.id.name" : [ 7798, 7800, 259, 3, 259, 5 ],
+    "events.OrderEventFailed.fields.id.type" : [ 7801, 7807, 259, 6, 259, 12 ],
+    "events.OrderEventFailed.fields.reason" : [ 7812, 7825, 260, 3, 260, 10 ],
+    "events.OrderEventFailed.fields.reason.name" : [ 7812, 7818, 260, 3, 260, 9 ],
+    "events.OrderEventFailed.fields.reason.type" : [ 7819, 7825, 260, 10, 260, 16 ],
+    "events.OrderStatusUpdated.fields.id" : [ 8041, 8050, 268, 4, 268, 7 ],
+    "events.OrderStatusUpdated.fields.id.name" : [ 8041, 8043, 268, 4, 268, 6 ],
+    "events.OrderStatusUpdated.fields.id.type" : [ 8044, 8050, 268, 7, 268, 13 ],
+    "events.OrderStatusUpdated.fields.dateTime" : [ 8056, 8072, 269, 4, 269, 13 ],
+    "events.OrderStatusUpdated.fields.dateTime.name" : [ 8056, 8064, 269, 4, 269, 12 ],
+    "events.OrderStatusUpdated.fields.dateTime.type" : [ 8065, 8072, 269, 13, 269, 20 ],
+    "events.OrderStatusUpdated.fields.status" : [ 8078, 8096, 270, 4, 270, 11 ],
+    "events.OrderStatusUpdated.fields.status.name" : [ 8078, 8084, 270, 4, 270, 10 ],
+    "events.OrderStatusUpdated.fields.status.type" : [ 8085, 8096, 270, 11, 270, 22 ],
+    "events.OrderStatusUpdated.fields.previousStatus" : [ 8102, 8128, 271, 4, 271, 19 ],
+    "events.OrderStatusUpdated.fields.previousStatus.name" : [ 8102, 8116, 271, 4, 271, 18 ],
+    "events.OrderStatusUpdated.fields.previousStatus.type" : [ 8117, 8128, 271, 19, 271, 30 ],
+    "events.EventWithNestedOutputs.fields.id" : [ 8171, 8180, 275, 4, 275, 7 ],
+    "events.EventWithNestedOutputs.fields.id.name" : [ 8171, 8173, 275, 4, 275, 6 ],
+    "events.EventWithNestedOutputs.fields.id.type" : [ 8174, 8180, 275, 7, 275, 13 ],
+    "events.EventWithNestedOutputs.fields.dateTime" : [ 8186, 8202, 276, 4, 276, 13 ],
+    "events.EventWithNestedOutputs.fields.dateTime.name" : [ 8186, 8194, 276, 4, 276, 12 ],
+    "events.EventWithNestedOutputs.fields.dateTime.type" : [ 8195, 8202, 276, 13, 276, 20 ],
+    "events.EventWithNestedOutputs.fields.status" : [ 8208, 8226, 277, 4, 277, 11 ],
+    "events.EventWithNestedOutputs.fields.status.name" : [ 8208, 8214, 277, 4, 277, 10 ],
+    "events.EventWithNestedOutputs.fields.status.type" : [ 8215, 8226, 277, 11, 277, 22 ],
+    "events.EventWithNestedOutputs.fields.nestedObject" : [ 8232, 8306, 278, 4, 281, 4 ],
+    "events.EventWithNestedOutputs.fields.nestedObject.name" : [ 8232, 8244, 278, 4, 278, 16 ],
+    "events.EventWithNestedOutputs.fields.nestedObject.type" : [ 8245, 8257, 278, 17, 278, 29 ],
+    "events.NestedObject" : [ 8245, 8306, 278, 17, 281, 4 ],
+    "events.NestedObject.name" : [ 8245, 8257, 278, 17, 278, 29 ],
+    "events.NestedObject.body" : [ 8258, 8306, 278, 30, 281, 4 ],
+    "events.NestedObject.fields.id" : [ 8269, 8278, 279, 8, 279, 11 ],
+    "events.NestedObject.fields.id.name" : [ 8269, 8271, 279, 8, 279, 10 ],
+    "events.NestedObject.fields.id.type" : [ 8272, 8278, 279, 11, 279, 17 ],
+    "events.NestedObject.fields.name" : [ 8288, 8299, 280, 8, 280, 13 ],
+    "events.NestedObject.fields.name.name" : [ 8288, 8292, 280, 8, 280, 12 ],
+    "events.NestedObject.fields.name.type" : [ 8293, 8299, 280, 13, 280, 19 ]
+  },
+  "problems" : [ ],
+  "javadoc" : "ZenWave Online Food Delivery - Orders Module.",
+  "plugins" : {
+    "ZDLToOpenAPIPlugin" : {
+      "name" : "ZDLToOpenAPIPlugin",
+      "javadoc" : null,
+      "disabled" : false,
+      "options" : {
+        "inherit" : true
+      },
+      "config" : {
+        "idType" : "string",
+        "targetFile" : "{{targetFolder}}/src/main/resources/apis/openapi.yml"
+      }
+    },
+    "ZDLToAsyncAPIPlugin" : {
+      "name" : "ZDLToAsyncAPIPlugin",
+      "javadoc" : null,
+      "disabled" : false,
+      "options" : {
+        "inherit" : true
+      },
+      "config" : {
+        "asyncapiVersion" : "v3",
+        "idType" : "string",
+        "targetFile" : "{{targetFolder}}/src/main/resources/apis/asyncapi.yml"
+      }
+    },
+    "BackendApplicationDefaultPlugin" : {
+      "name" : "BackendApplicationDefaultPlugin",
+      "javadoc" : null,
+      "disabled" : false,
+      "options" : {
+        "inherit" : true
+      },
+      "config" : {
+        "useLombok" : true,
+        "includeEmitEventsImplementation" : true
+      }
+    },
+    "OpenAPIControllersPlugin" : {
+      "name" : "OpenAPIControllersPlugin",
+      "javadoc" : null,
+      "disabled" : false,
+      "options" : {
+        "inherit" : true
+      },
+      "config" : {
+        "formatter" : "google",
+        "specFile" : "modules/orders/src/main/resources/apis/openapi.yml",
+        "zdlFile" : "models/orders.zdl",
+        "openApiApiPackage" : "{{basePackage}}.adapters.web",
+        "openApiModelPackage" : "{{basePackage}}.adapters.web.model",
+        "openApiModelNameSuffix" : "DTO"
+      }
+    },
+    "SpringCloudStreams3AdaptersPlugin" : {
+      "name" : "SpringCloudStreams3AdaptersPlugin",
+      "javadoc" : null,
+      "disabled" : false,
+      "options" : {
+        "inherit" : true
+      },
+      "config" : {
+        "apiId" : "delivery",
+        "role" : "client",
+        "specFile" : "modules/delivery/src/main/resources/apis/asyncapi.yml",
+        "modelPackage" : "{{basePackage}}.client.{{apiId}}.events.dtos",
+        "consumerApiPackage" : "{{basePackage}}.client.{{apiId}}.events.consumer"
+      }
+    }
+  },
+  "allEntitiesAndEnums" : {
+    "Address" : {
+      "name" : "Address",
+      "className" : "Address",
+      "tableName" : "address",
+      "instanceName" : "address",
+      "classNamePlural" : "Addresses",
+      "instanceNamePlural" : "addresses",
+      "kebabCase" : "address",
+      "kebabCasePlural" : "addresses",
+      "javadoc" : null,
+      "options" : {
+        "embedded" : true
+      },
+      "fields" : {
+        "street" : {
+          "name" : "street",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "city" : {
+          "name" : "city",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "state" : {
+          "name" : "state",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "zip" : {
+          "name" : "zip",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        }
+      },
+      "type" : "entities"
+    },
+    "OrdersFilter" : {
+      "name" : "OrdersFilter",
+      "className" : "OrdersFilter",
+      "tableName" : "orders_filter",
+      "instanceName" : "ordersFilter",
+      "classNamePlural" : "OrdersFilters",
+      "instanceNamePlural" : "ordersFilters",
+      "kebabCase" : "orders-filter",
+      "kebabCasePlural" : "orders-filters",
+      "javadoc" : null,
+      "options" : { },
+      "fields" : {
+        "status" : {
+          "name" : "status",
+          "type" : "OrderStatus",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : true,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        },
+        "customerName" : {
+          "name" : "customerName",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "restaurantName" : {
+          "name" : "restaurantName",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        }
+      },
+      "type" : "inputs"
+    },
+    "Customer" : {
+      "name" : "Customer",
+      "className" : "Customer",
+      "tableName" : "customer_table",
+      "instanceName" : "customer",
+      "classNamePlural" : "Customers",
+      "instanceNamePlural" : "customers",
+      "kebabCase" : "customer",
+      "kebabCasePlural" : "customers",
+      "javadoc" : null,
+      "options" : {
+        "embedded" : true,
+        "auditing" : true,
+        "ref" : true
+      },
+      "fields" : {
+        "customerId" : {
+          "name" : "customerId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "firstName" : {
+          "name" : "firstName",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "lastName" : {
+          "name" : "lastName",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "email" : {
+          "name" : "email",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "phone" : {
+          "name" : "phone",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "avatar" : {
+          "name" : "avatar",
+          "type" : "byte[]",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "address" : {
+          "name" : "address",
+          "type" : "Address",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : true,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        }
+      },
+      "type" : "entities"
+    },
+    "CustomerOrder" : {
+      "name" : "CustomerOrder",
+      "className" : "CustomerOrder",
+      "tableName" : "customer_order",
+      "instanceName" : "customerOrder",
+      "classNamePlural" : "CustomerOrders",
+      "instanceNamePlural" : "customerOrders",
+      "kebabCase" : "customer-order",
+      "kebabCasePlural" : "customer-orders",
+      "javadoc" : null,
+      "options" : {
+        "aggregate" : true
+      },
+      "fields" : {
+        "orderTime" : {
+          "name" : "orderTime",
+          "type" : "Instant",
+          "initialValue" : "Instant.now()",
+          "javadoc" : "orderTime javadoc",
+          "comment" : "orderTime javadoc",
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "status" : {
+          "name" : "status",
+          "type" : "OrderStatus",
+          "initialValue" : "OrderStatus.RECEIVED",
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : true,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          },
+          "isComplexType" : true
+        },
+        "customerDetails" : {
+          "name" : "customerDetails",
+          "type" : "Customer",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : true,
+          "isArray" : false,
+          "options" : {
+            "auditing" : true,
+            "ref" : true
+          },
+          "validations" : { },
+          "optionsList" : [ {
+            "name" : "auditing",
+            "value" : true
+          }, {
+            "name" : "ref",
+            "value" : true
+          } ],
+          "isComplexType" : true
+        },
+        "restaurantDetails" : {
+          "name" : "restaurantDetails",
+          "type" : "Restaurant",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : true,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        },
+        "orderItems" : {
+          "name" : "orderItems",
+          "type" : "OrderItem",
+          "initialValue" : null,
+          "javadoc" : "orderItems javadoc",
+          "comment" : "orderItems javadoc",
+          "isEnum" : false,
+          "isEntity" : true,
+          "isArray" : true,
+          "options" : { },
+          "validations" : {
+            "minlength" : {
+              "value" : "1",
+              "name" : "minlength"
+            },
+            "maxlength" : {
+              "value" : "200",
+              "name" : "maxlength"
+            }
+          },
+          "isComplexType" : true
+        }
+      },
+      "type" : "entities",
+      "optionsList" : [ {
+        "name" : "aggregate",
+        "value" : true
+      } ]
+    },
+    "EnumWithValue" : {
+      "name" : "EnumWithValue",
+      "type" : "enums",
+      "className" : "EnumWithValue",
+      "javadoc" : null,
+      "comment" : null,
+      "hasValue" : true,
+      "values" : {
+        "VALUE1" : {
+          "name" : "VALUE1",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : "1"
+        },
+        "VALUE2" : {
+          "name" : "VALUE2",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : "2"
+        }
+      }
+    },
+    "CustomerOrderAggregate" : {
+      "name" : "CustomerOrderAggregate",
+      "type" : "aggregates",
+      "className" : "CustomerOrderAggregate",
+      "javadoc" : null,
+      "aggregateRoot" : "CustomerOrder",
+      "commands" : {
+        "customerOrderCommand" : {
+          "name" : "customerOrderCommand",
+          "aggregateName" : "CustomerOrderAggregate",
+          "parameter" : "CustomerOrderInput",
+          "withEvents" : [ "OrderEvent" ],
+          "javadoc" : null
+        }
+      }
+    },
+    "CustomerOrderInput" : {
+      "name" : "CustomerOrderInput",
+      "className" : "CustomerOrderInput",
+      "tableName" : "customer_order_input",
+      "instanceName" : "customerOrderInput",
+      "classNamePlural" : "CustomerOrderInputs",
+      "instanceNamePlural" : "customerOrderInputs",
+      "kebabCase" : "customer-order-input",
+      "kebabCasePlural" : "customer-order-inputs",
+      "javadoc" : null,
+      "options" : {
+        "array_annotation" : [ "item1", "item2", "item3" ],
+        "array2_annotation" : [ "item1", "item2", "item3" ],
+        "object_annotation" : {
+          "item1" : "value1",
+          "item2" : "value2",
+          "item3" : "value3"
+        },
+        "object_annotation_pairs" : {
+          "item1" : "value1",
+          "item2" : "value2",
+          "item3" : "value3"
+        },
+        "object_annotation_nested_array" : {
+          "item1" : "value1",
+          "item2" : "value2",
+          "item3" : [ "value1", "value2" ]
+        }
+      },
+      "fields" : {
+        "orderTime" : {
+          "name" : "orderTime",
+          "type" : "Instant",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "status" : {
+          "name" : "status",
+          "type" : "OrderStatus",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : true,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        },
+        "customerId" : {
+          "name" : "customerId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "restaurantId" : {
+          "name" : "restaurantId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "addressIdentifier" : {
+          "name" : "addressIdentifier",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "orderItems" : {
+          "name" : "orderItems",
+          "type" : "OrderItemInput",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : true,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            },
+            "minlength" : {
+              "value" : "1",
+              "name" : "minlength"
+            }
+          },
+          "isInput" : true,
+          "isComplexType" : true
+        }
+      },
+      "type" : "inputs",
+      "optionsList" : [ {
+        "name" : "array_annotation",
+        "value" : [ "item1", "item2", "item3" ]
+      }, {
+        "name" : "array2_annotation",
+        "value" : [ "item1", "item2", "item3" ]
+      }, {
+        "name" : "object_annotation",
+        "value" : {
+          "item1" : "value1",
+          "item2" : "value2",
+          "item3" : "value3"
+        }
+      }, {
+        "name" : "object_annotation_pairs",
+        "value" : {
+          "item1" : "value1",
+          "item2" : "value2",
+          "item3" : "value3"
+        }
+      }, {
+        "name" : "object_annotation_nested_array",
+        "value" : {
+          "item1" : "value1",
+          "item2" : "value2",
+          "item3" : [ "value1", "value2" ]
+        }
+      } ]
+    },
+    "NestedOutput" : {
+      "name" : "NestedOutput",
+      "className" : "NestedOutput",
+      "tableName" : "nested_output",
+      "instanceName" : "nestedOutput",
+      "classNamePlural" : "NestedOutputs",
+      "instanceNamePlural" : "nestedOutputs",
+      "kebabCase" : "nested-output",
+      "kebabCasePlural" : "nested-outputs",
+      "javadoc" : "nested output javadoc",
+      "options" : {
+        "embedded" : true
+      },
+      "fields" : {
+        "nestedField" : {
+          "name" : "nestedField",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        }
+      },
+      "type" : "outputs"
+    },
+    "Restaurant" : {
+      "name" : "Restaurant",
+      "className" : "Restaurant",
+      "tableName" : "restaurant",
+      "instanceName" : "restaurant",
+      "classNamePlural" : "Restaurants",
+      "instanceNamePlural" : "restaurants",
+      "kebabCase" : "restaurant",
+      "kebabCasePlural" : "restaurants",
+      "javadoc" : null,
+      "options" : {
+        "embedded" : true
+      },
+      "fields" : {
+        "restaurantId" : {
+          "name" : "restaurantId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "name" : {
+          "name" : "name",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "phone" : {
+          "name" : "phone",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "addresses" : {
+          "name" : "addresses",
+          "type" : "Address",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : true,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        }
+      },
+      "type" : "entities"
+    },
+    "CustomerOrderOutput" : {
+      "name" : "CustomerOrderOutput",
+      "className" : "CustomerOrderOutput",
+      "tableName" : "customer_order_output",
+      "instanceName" : "customerOrderOutput",
+      "classNamePlural" : "CustomerOrderOutputs",
+      "instanceNamePlural" : "customerOrderOutputs",
+      "kebabCase" : "customer-order-output",
+      "kebabCasePlural" : "customer-order-outputs",
+      "javadoc" : "CustomerOrderOutput javadoc",
+      "options" : { },
+      "fields" : {
+        "field" : {
+          "name" : "field",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : "field javadoc",
+          "comment" : "field javadoc",
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "nestedOutput" : {
+          "name" : "nestedOutput",
+          "type" : "NestedOutput",
+          "initialValue" : null,
+          "javadoc" : "nested output javadoc",
+          "comment" : "nested output javadoc",
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          },
+          "isOutput" : true,
+          "isComplexType" : true
+        }
+      },
+      "type" : "outputs"
+    },
+    "OrderStatus" : {
+      "name" : "OrderStatus",
+      "type" : "enums",
+      "className" : "OrderStatus",
+      "javadoc" : null,
+      "comment" : null,
+      "values" : {
+        "RECEIVED" : {
+          "name" : "RECEIVED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "KITCHEN_ACCEPTED" : {
+          "name" : "KITCHEN_ACCEPTED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "DELIVERY_ACCEPTED" : {
+          "name" : "DELIVERY_ACCEPTED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "CONFIRMED" : {
+          "name" : "CONFIRMED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "KITCHEN_IN_PROGRESS" : {
+          "name" : "KITCHEN_IN_PROGRESS",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "KITCHEN_READY" : {
+          "name" : "KITCHEN_READY",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "KITCHEN_DELIVERED" : {
+          "name" : "KITCHEN_DELIVERED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "ON_DELIVERY" : {
+          "name" : "ON_DELIVERY",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "DELIVERED" : {
+          "name" : "DELIVERED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "CANCELLED" : {
+          "name" : "CANCELLED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        }
+      }
+    },
+    "Aggregate2" : {
+      "name" : "Aggregate2",
+      "className" : "Aggregate2",
+      "tableName" : "aggregate2",
+      "instanceName" : "aggregate2",
+      "classNamePlural" : "Aggregate2s",
+      "instanceNamePlural" : "aggregate2s",
+      "kebabCase" : "aggregate2",
+      "kebabCasePlural" : "aggregate2s",
+      "javadoc" : null,
+      "options" : {
+        "aggregate" : true
+      },
+      "fields" : { },
+      "type" : "entities",
+      "optionsList" : [ {
+        "name" : "aggregate",
+        "value" : true
+      } ]
+    },
+    "OrderItem" : {
+      "name" : "OrderItem",
+      "className" : "OrderItem",
+      "tableName" : "order_item",
+      "instanceName" : "orderItem",
+      "classNamePlural" : "OrderItems",
+      "instanceNamePlural" : "orderItems",
+      "kebabCase" : "order-item",
+      "kebabCasePlural" : "order-items",
+      "javadoc" : "orderItems javadoc",
+      "options" : {
+        "embedded" : true
+      },
+      "fields" : {
+        "menuItemId" : {
+          "name" : "menuItemId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "name" : {
+          "name" : "name",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "description" : {
+          "name" : "description",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "price" : {
+          "name" : "price",
+          "type" : "BigDecimal",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "quantity" : {
+          "name" : "quantity",
+          "type" : "Integer",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        }
+      },
+      "type" : "entities"
+    },
+    "DeliveryStatusInput" : {
+      "name" : "DeliveryStatusInput",
+      "className" : "DeliveryStatusInput",
+      "tableName" : "delivery_status_input",
+      "instanceName" : "deliveryStatusInput",
+      "classNamePlural" : "DeliveryStatusInputs",
+      "instanceNamePlural" : "deliveryStatusInputs",
+      "kebabCase" : "delivery-status-input",
+      "kebabCasePlural" : "delivery-status-inputs",
+      "javadoc" : null,
+      "options" : { },
+      "fields" : {
+        "deliveryOrderId" : {
+          "name" : "deliveryOrderId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "deliveryStatus" : {
+          "name" : "deliveryStatus",
+          "type" : "DeliveryStatus",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : true,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        }
+      },
+      "type" : "inputs"
+    },
+    "DeliveryStatus" : {
+      "name" : "DeliveryStatus",
+      "type" : "enums",
+      "className" : "DeliveryStatus",
+      "javadoc" : null,
+      "comment" : null,
+      "options" : {
+        "input" : true
+      },
+      "optionsList" : [ {
+        "name" : "input",
+        "value" : true
+      } ],
+      "values" : {
+        "REJECTED" : {
+          "name" : "REJECTED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "ACCEPTED" : {
+          "name" : "ACCEPTED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "IN_PROGRESS" : {
+          "name" : "IN_PROGRESS",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "DELIVERED" : {
+          "name" : "DELIVERED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "CANCELLED" : {
+          "name" : "CANCELLED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        }
+      }
+    },
+    "KitchenStatusInput" : {
+      "name" : "KitchenStatusInput",
+      "className" : "KitchenStatusInput",
+      "tableName" : "kitchen_status_input",
+      "instanceName" : "kitchenStatusInput",
+      "classNamePlural" : "KitchenStatusInputs",
+      "instanceNamePlural" : "kitchenStatusInputs",
+      "kebabCase" : "kitchen-status-input",
+      "kebabCasePlural" : "kitchen-status-inputs",
+      "javadoc" : null,
+      "options" : { },
+      "fields" : {
+        "kitchenOrderId" : {
+          "name" : "kitchenOrderId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "kitchenStatus" : {
+          "name" : "kitchenStatus",
+          "type" : "KitchenStatus",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : true,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { },
+          "isComplexType" : true
+        }
+      },
+      "type" : "inputs"
+    },
+    "KitchenStatus" : {
+      "name" : "KitchenStatus",
+      "type" : "enums",
+      "className" : "KitchenStatus",
+      "javadoc" : null,
+      "comment" : null,
+      "options" : {
+        "input" : true
+      },
+      "optionsList" : [ {
+        "name" : "input",
+        "value" : true
+      } ],
+      "values" : {
+        "REJECTED" : {
+          "name" : "REJECTED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "ACCEPTED" : {
+          "name" : "ACCEPTED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "IN_PROGRESS" : {
+          "name" : "IN_PROGRESS",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "READY" : {
+          "name" : "READY",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "DELIVERED" : {
+          "name" : "DELIVERED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        },
+        "CANCELLED" : {
+          "name" : "CANCELLED",
+          "javadoc" : null,
+          "comment" : null,
+          "value" : null
+        }
+      }
+    },
+    "OrderItemInput" : {
+      "name" : "OrderItemInput",
+      "className" : "OrderItemInput",
+      "tableName" : "order_item_input",
+      "instanceName" : "orderItemInput",
+      "classNamePlural" : "OrderItemInputs",
+      "instanceNamePlural" : "orderItemInputs",
+      "kebabCase" : "order-item-input",
+      "kebabCasePlural" : "order-item-inputs",
+      "javadoc" : null,
+      "options" : {
+        "embedded" : true
+      },
+      "fields" : {
+        "menuItemId" : {
+          "name" : "menuItemId",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : "menuItemId javadoc",
+          "comment" : "menuItemId javadoc",
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "name" : {
+          "name" : "name",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : "",
+          "comment" : "",
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "description" : {
+          "name" : "description",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : "description javadoc",
+          "comment" : "description javadoc",
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "price" : {
+          "name" : "price",
+          "type" : "BigDecimal",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        },
+        "quantity" : {
+          "name" : "quantity",
+          "type" : "Integer",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : {
+            "required" : {
+              "value" : "",
+              "name" : "required"
+            }
+          }
+        }
+      },
+      "type" : "inputs"
+    },
+    "CancelOrderInput" : {
+      "name" : "CancelOrderInput",
+      "className" : "CancelOrderInput",
+      "tableName" : "cancel_order_input",
+      "instanceName" : "cancelOrderInput",
+      "classNamePlural" : "CancelOrderInputs",
+      "instanceNamePlural" : "cancelOrderInputs",
+      "kebabCase" : "cancel-order-input",
+      "kebabCasePlural" : "cancel-order-inputs",
+      "javadoc" : null,
+      "options" : { },
+      "fields" : {
+        "id" : {
+          "name" : "id",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        },
+        "reason" : {
+          "name" : "reason",
+          "type" : "String",
+          "initialValue" : null,
+          "javadoc" : null,
+          "comment" : null,
+          "isEnum" : false,
+          "isEntity" : false,
+          "isArray" : false,
+          "options" : { },
+          "validations" : { }
+        }
+      },
+      "type" : "inputs"
+    }
+  }
+}

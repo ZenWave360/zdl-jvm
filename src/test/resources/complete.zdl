@@ -217,6 +217,9 @@ service OrdersService for (CustomerOrder) {
     @put("/{orderId}")
     updateOrder(id, CustomerOrderInput) CustomerOrder withEvents OrderEvent OrderStatusUpdated
 
+    @put("/{orderId}")
+    createOrUpdateOrder(id?, CustomerOrderInput) CustomerOrder withEvents OrderEvent OrderStatusUpdated
+
     @asyncapi({api: RestaurantsAsyncAPI, channel: "KitchenOrdersStatusChannel"})
     updateKitchenStatus(id, KitchenStatusInput) CustomerOrder withEvents OrderEvent OrderStatusUpdated
     @asyncapi({api: DeliveryAsyncAPI, channel: "DeliveryStatusChannel"})
@@ -227,7 +230,7 @@ service OrdersService for (CustomerOrder) {
     cancelOrder(id, CancelOrderInput) CustomerOrder withEvents OrderEvent OrderStatusUpdated
 
     @post({path: "/search", params: {param1: String, param2: Integer}})
-    searchOrders(OrdersFilter) CustomerOrder[]
+    searchOrders(OrdersFilter?) CustomerOrder[]
 }
 
 service OrdersService2 for (CustomerOrder, Aggregate2) {

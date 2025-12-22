@@ -64,7 +64,7 @@ public class ZdlListenerTest {
         ZdlModel model = parseZdl("src/test/resources/complete.zdl");
         assertEquals("ZenWave Online Food Delivery - Orders Module.", get(model, "$.javadoc"));
 
-        assertEquals("com.example:artifact:RELEASE", get(model, "$.imports[0]"));
+        assertEquals("com.example:artifact:RELEASE", get(model, "$.imports[0].value"));
 
         // CONFIG
         assertEquals("io.zenwave360.example.orders", get(model, "$.config.basePackage"));
@@ -156,7 +156,7 @@ public class ZdlListenerTest {
         assertEquals(2, get(model, "$.services", Map.of()).size());
         assertEquals(List.of("CustomerOrder"), get(model, "$.services.OrdersService.aggregates"));
         assertEquals(List.of("CustomerOrder", "Aggregate2"), get(model, "$.services.OrdersService2.aggregates"));
-        assertEquals(7, get(model, "$.services.OrdersService.methods", Map.of()).size());
+        assertEquals(8, get(model, "$.services.OrdersService.methods", Map.of()).size());
 
         assertEquals(List.of("OrderEvent", "OrderStatusUpdated"), get(model, "$.services.OrdersService.methods.updateKitchenStatus.withEvents"));
         assertEquals("RestaurantsAsyncAPI", get(model, "$.services.OrdersService.methods.updateKitchenStatus.options.asyncapi.api"));
@@ -168,6 +168,14 @@ public class ZdlListenerTest {
 
         assertEquals("/search", get(model, "$.services.OrdersService.methods.searchOrders.options.post.path"));
         assertEquals("String", get(model, "$.services.OrdersService.methods.searchOrders.options.post.params.param1"));
+
+        // Test parameterIsOptional for different service methods
+        assertEquals(false, get(model, "$.services.OrdersService.methods.createOrder.parameterIsOptional", false));
+        assertEquals(false, get(model, "$.services.OrdersService.methods.updateOrder.parameterIsOptional", false));
+        assertEquals(true, get(model, "$.services.OrdersService.methods.searchOrders.parameterIsOptional", false));
+        assertEquals(false, get(model, "$.services.OrdersService.methods.getCustomerOrder.parameterIsOptional", false));
+
+        assertEquals(true, get(model, "$.services.OrdersService.methods.createOrUpdateOrder.paramIdIsOptional", false));
 
         // ANNOTATIONS
         assertEquals("item1", get(model, "$.inputs.CustomerOrderInput.options.array_annotation[0]"));

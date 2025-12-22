@@ -120,7 +120,8 @@ ERRCHAR: . -> channel(HIDDEN);
 // Rules
 zdl: legacy_constants (import_ | config | apis | policies | aggregate | entity | enum | input | output | event | relationships | service | service_legacy)* EOF;
 
-import_: '@import' LPAREN import_value RPAREN;
+import_: '@import' LPAREN (import_value | import_key COLON import_value) RPAREN;
+import_key: ID;
 import_value: string;
 global_javadoc: JAVADOC;
 javadoc: JAVADOC;
@@ -256,7 +257,7 @@ aggregate_name: ID;
 aggregate_root: ID;
 aggregate_command: javadoc? annotations aggregate_command_name LPAREN aggregate_command_parameter? RPAREN with_events? suffix_javadoc?;
 aggregate_command_name: ID;
-aggregate_command_parameter: ID;
+aggregate_command_parameter: ID | ID OPTIONAL;
 
 // services
 service: javadoc? annotations SERVICE service_name FOR LPAREN service_aggregates RPAREN LBRACE service_method* RBRACE;
@@ -269,8 +270,8 @@ service_method: javadoc? annotations service_method_name
     RPAREN service_method_return? with_events? suffix_javadoc?;
 service_method_name: ID;
 service_method_parameter_natural: '@natural';
-service_method_parameter_id: PARAM_ID;
-service_method_parameter: ID;
+service_method_parameter_id: PARAM_ID | PARAM_ID OPTIONAL;
+service_method_parameter: ID | ID OPTIONAL;
 service_method_return: ID | ID ARRAY | ID OPTIONAL;
 
 
