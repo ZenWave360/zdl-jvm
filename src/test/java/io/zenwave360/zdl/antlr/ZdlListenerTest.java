@@ -122,6 +122,7 @@ public class ZdlListenerTest {
         assertEquals(true, get(model, "$.entities.CustomerOrder.fields.customerDetails.isComplexType"));
         assertNotNull(get(model, "$.entities.CustomerOrder.fields.customerDetails.options.auditing"));
         assertNotNull(get(model, "$.entities.CustomerOrder.fields.customerDetails.options.ref"));
+        assertNotNull(get(model, "$.entities.Customer.fields.email.validations.email"));
 
         assertEquals("OrderItem", get(model, "$.entities.CustomerOrder.fields.orderItems.type"));
         assertNull(get(model, "$.entities.CustomerOrder.fields.orderItems.initialValue"));

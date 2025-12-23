@@ -86,7 +86,7 @@ entity CustomerOrder {
       customerId String  required
       firstName String required
       lastName String required
-      email String required
+      email String required email
       phone String required
       avatar byte[]
       address Address {

@@ -208,7 +208,7 @@ field_initialization: EQUALS field_initial_value;
 field_initial_value: simple;
 //field_validations: REQUIRED | UNIQUE | min_validation | max_validation | minlength_validation | maxlength_validation | pattern_validation;
 field_validations: field_validation_name (LPAREN field_validation_value RPAREN)?;
-field_validation_name: REQUIRED | UNIQUE | MIN | MAX | MINLENGTH | MAXLENGTH | PATTERN;
+field_validation_name: REQUIRED | UNIQUE | MIN | MAX | MINLENGTH | MAXLENGTH | PATTERN | EMAIL;
 field_validation_value: INT | ID | PATTERN_REGEX;
 nested_field_validations: nested_field_validation_name (LPAREN nested_field_validation_value RPAREN)?;
 nested_field_validation_name: REQUIRED | UNIQUE | MINLENGTH | MAXLENGTH;
