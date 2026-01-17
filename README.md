@@ -8,7 +8,7 @@ ZenWave Domain Model Language
 [![branches coverage](https://raw.githubusercontent.com/ZenWave360/zdl-jvm/badges/branches.svg)](https://github.com/ZenWave360/zdl-jvm/actions/workflows/main.yml)
 [![GitHub](https://img.shields.io/github/license/ZenWave360/zdl-jvm)](https://github.com/ZenWave360/zdl-jvm/blob/main/LICENSE)
 
-> Since version 1.3.0 groupId was changed to `io.zenwave360.sdk`
+> **NOTE:** Version 1.4.0 is the final release of this project. It has been superseded by [dsl-kotlin](https://github.com/ZenWave360/dsl-kotlin), a multiplatform evolution supporting both ZDL and ZFL grammars for JVM and JS.
 
 ZDL is a Domain Specific Language (DSL) for Event-Driven Architectures. With Domain Driven Design principles built-in, it can be used to map the discoveries of an [EventStorming](https://www.eventstorming.com/) session.
 
